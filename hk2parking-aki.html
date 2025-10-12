@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>東郡山2丁目駐車場 区画図</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      margin: 40px;
+    }
+
+    .parking-container {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ボタン */
+    .spot-btn {
+      width: 150px;       /* 横3倍 */
+      height: 60px;       /* 縦1.5倍 */
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .spot-btn:hover {
+      opacity: 0.8;
+    }
+
+    .free {
+      background-color: #2ecc71; /* 緑：空き */
+    }
+
+    .taken {
+      background-color: #e74c3c; /* 赤：済 */
+    }
+
+    /* 列間スペース */
+    .space {
+      width: 200px; /* ボタン幅(150px)×1倍 */
+    }
+
+    /* 区画図画像 */
+    .map-image {
+      margin-left: 20px;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="parking-container">
+    <!-- 左列 -->
+    <div class="column left-column">
+      <button class="spot-btn free">23</button>
+      <button class="spot-btn taken">21</button>
+      <button class="spot-btn taken">19</button>
+      <button class="spot-btn free">16</button>
+      <button class="spot-btn taken">13</button>
+      <button class="spot-btn taken">12</button>
+      <button class="spot-btn taken">6</button>
+      <button class="spot-btn taken">5</button>
+      <button class="spot-btn taken">3</button>
+      <button class="spot-btn taken">2</button>
+      <button class="spot-btn taken">1</button>
+    </div>
+
+    <!-- 中央スペース -->
+    <div class="space"></div>
+
+    <!-- 右列 -->
+    <div class="column right-column">
+      <button class="spot-btn free">22</button>
+      <button class="spot-btn taken">20</button>
+      <button class="spot-btn taken">18</button>
+      <button class="spot-btn taken">17</button>
+      <button class="spot-btn taken">15</button>
+      <button class="spot-btn taken">14</button>
+      <button class="spot-btn taken">11</button>
+      <button class="spot-btn taken">10</button>
+      <button class="spot-btn taken">9</button>
+      <button class="spot-btn taken">8</button>
+      <button class="spot-btn taken">7</button>
+    </div>
+
+    <!-- 区画図画像 -->
+    <img src="kukaku.jpg" alt="区画図" class="map-image">
+  </div>
+
+  <script>
+    // GoogleフォームのベースURL（自分のフォームに変更）
+    const formBaseURL = "https://docs.google.com/forms/d/e/xxxxxxxxxxxx/viewform";
+
+    // 各ボタンのクリック処理
+    document.querySelectorAll('.spot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const spotNumber = btn.textContent;
+
+        if (btn.classList.contains('free')) {
+          // 空きの場合：フォームを開く
+          //const fullURL = `${formBaseURL}?entry.123456789=${spotNumber}`;
+          //window.open(fullURL, "_blank");
+          alert(`車室${spotNumber} は現在空きです。`);
+
+        } else {
+          // 済の場合：アラート
+          alert(`車室${spotNumber} は現在契約済みです。`);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

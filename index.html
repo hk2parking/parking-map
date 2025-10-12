@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>東郡山2丁目駐車場</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    #map { height: 600px; width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>東郡山2丁目駐車場マップ</h1>
+  <div id="map"></div>
+
+  <script>
+    // 東郡山2丁目駐車場位置
+    var map = L.map('map').setView([38.221612, 140.900544], 13);
+
+    // OpenStreetMapを利用
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 駐車場データ
+    var parkings = [
+      {name: "東郡山2丁目駐車場", lat: 38.221612, lng: 140.900544, url: "hk2parking-main.html"},
+      
+      // 最大22件まで追加可能
+    ];
+
+    // マーカーを追加
+    parkings.forEach(function(p) {
+      L.marker([p.lat, p.lng])
+        .addTo(map)
+        .bindPopup("<b>"+p.name+"</b><br><a href='"+p.url+"'>詳細を見る</a>");
+    });
+  </script>
+</body>
+</html>
