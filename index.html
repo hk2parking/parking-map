@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <title>太白区 東郡山 2丁目 月極駐車場｜郡山3丁目 周辺 郡山4丁目 周辺 八本松 周辺</title>
   <meta name="description" content="仙台市太白区東郡山2丁目の月極駐車場（22区画）。料金や空き状況を地図で確認できます。">
-　<meta name="keywords" content="郡山周辺,八本松周辺,東郡山周辺,郡山,東郡山,八本松,東郡山2丁目, 太白区, 月極駐車場, 空き駐車場, 仙台市, 駐車場マップ">
 
   <style>
     body { font-family: sans-serif; margin: 12px; }
@@ -13,103 +12,84 @@
   </style>
 </head>
 <body>
-  <h1>太白区 東郡山2丁目 月極駐車場</h1>
-    
-  <div id="map"></div>
+<h1>太白区 東郡山2丁目 月極駐車場</h1>
+<div id="map"></div>
 
-  <script>
-    // Google Maps の初期化コールバック（API読み込み時に呼ばれる）
-    async function initMap() {
-      // 初期中心（東郡山あたり）
-      const center = { lat: 38.221612, lng: 140.900544 };
-      const map = new google.maps.Map(document.getElementById('map'), {
-        center: center,
-        zoom: 15,
-        mapTypeId: 'roadmap'
+<script>
+async function initMap() {
+  const map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 15,
+    center: { lat: 38.221612, lng: 140.900544 },
+    mapTypeId: 'roadmap'
+  });
+
+  const infoWindow = new google.maps.InfoWindow();
+  const bounds = new google.maps.LatLngBounds();
+
+  try {
+    const res = await fetch('parkings.csv');
+    if (!res.ok) throw new Error('CSV読み込み失敗: ' + res.status);
+    const text = await res.text();
+    const lines = text.trim().split('\n');
+
+    for (let i = 1; i < lines.length; i++) {
+      if (!lines[i].trim()) continue;
+      const cols = lines[i].split(',');
+      const name = cols[0]?.trim() || ('NoName-'+i);
+      const lat = parseFloat(cols[1]);
+      const lng = parseFloat(cols[2]);
+      const url = cols[3]?.trim() || '#';
+      const status = cols[4]?.trim().toLowerCase();
+
+      if (isNaN(lat) || isNaN(lng)) continue;
+
+      const pinColor = status === 'taken' ? 'red' : (status === 'free' ? 'green' : 'blue');
+      const svgMarker = {
+        path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z M12 11.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z",
+        fillColor: pinColor,
+        fillOpacity: 1,
+        strokeWeight: 0,
+        scale: 1.6
+      };
+
+      const marker = new google.maps.Marker({
+        position: { lat, lng },
+        map,
+        title: name,
+        icon: svgMarker
       });
 
-      // 情報ウィンドウ（1つを使い回す）
-      const infoWindow = new google.maps.InfoWindow();
+      marker.addListener('click', () => {
+        infoWindow.setContent(`<strong>${name}</strong><br>` + 
+                              (url !== '#' ? `<a href="${url}" target="_blank">詳細を見る</a>` : ''));
+        infoWindow.open(map, marker);
+        map.panTo(marker.getPosition());
+      });
 
-      // CSV をフェッチしてパース（シンプルな実装）
-      try {
-        const res = await fetch('parkings.csv');
-        if (!res.ok) throw new Error('parkings.csv が読み込めません: ' + res.status);
-        const text = await res.text();
-        const lines = text.trim().split('\n');
-        if (lines.length <= 1) {
-          console.warn('CSV にデータがありません');
-          return;
-        }
+      bounds.extend({ lat, lng });
+    }
 
-        const bounds = new google.maps.LatLngBounds();
-        // assume header present: name,lat,lng,url,status(optional)
-        for (let i = 1; i < lines.length; i++) {
-          if (!lines[i].trim()) continue;
-          // split by comma — if your name contains commas, switch to a proper CSV parser
-          const cols = lines[i].split(',');
-          const name = cols[0] ? cols[0].trim() : ('NoName-' + i);
-          const lat = parseFloat((cols[1]||'').trim());
-          const lng = parseFloat((cols[2]||'').trim());
-          const url = cols[3] ? cols[3].trim() : '#';
-          const status = cols[4] ? cols[4].trim().toLowerCase() : ''; // optional: 'free' or 'taken'
-
-          if (isNaN(lat) || isNaN(lng)) {
-            console.warn('無効な緯度経度:', lines[i]);
-            continue;
-          }
-
-          // マーカー色をステータスで変える（緑=空き, 赤=満車, デフォルト=青）
-          const pinColor = status === 'taken' ? 'red' : (status === 'free' ? 'green' : 'blue');
-          const svgMarker = {
-            path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z M12 11.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z",
-            fillColor: pinColor,
-            fillOpacity: 1,
-            strokeWeight: 0,
-            scale: 1.6
-          };
-
-          const marker = new google.maps.Marker({
-            position: { lat, lng },
-            map: map,
-            title: name,
-            icon: svgMarker
-          });
-
-          marker.addListener('click', () => {
-            const html = `<strong>${escapeHtml(name)}</strong><br>` +
-                         (url && url !== '#' ? `<a href="${escapeHtml(url)}" target="_blank">詳細を見る</a>` : '');
-            infoWindow.setContent(html);
-            infoWindow.open(map, marker);
-          });
-
-          bounds.extend({ lat, lng });
-        }
-
-        // マーカーが1つ以上あればズームを調整
+    // マーカーが1つだけなら setCenter + zoom、複数なら fitBounds
+    if (!bounds.isEmpty()) {
+      if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+        map.setCenter(bounds.getCenter());
+        map.setZoom(17); // 1つの場合の固定ズーム
+      } else {
         map.fitBounds(bounds);
-
-      } catch (err) {
-        console.error(err);
-        alert('地図データの読み込みでエラーが発生しました：' + err.message);
       }
     }
 
-    // HTMLエスケープの簡易関数（安全のため）
-    function escapeHtml(str) {
-      return str.replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
-                .replaceAll('"', '&quot;')
-                .replaceAll("'", '&#39;');
-    }
-  </script>
+  } catch (err) {
+    console.error(err);
+    alert('地図データ読み込みエラー: ' + err.message);
+  }
+}
+</script>
 
-  <!-- ↓ ここを自分の APIキーに置き換える -->
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-drkY6XN5ki0nZACX8Fdi-UW8nzK5tzs&callback=initMap">
-  </script>
-  <p>
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+</script>
+<p>
     仙台市太白区東郡山 2丁目の月極駐車場です。防犯カメラ設置済みで安心。全22区画 空き区画を確認できます。賃料6,600円  申込はGoogleフォームから可能です。
   </p>
 
