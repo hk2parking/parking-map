@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <title>太白区 東郡山 2丁目 月極駐車場｜郡山3丁目 周辺 郡山4丁目 周辺 八本松 周辺</title>
-  <meta name="description" content="仙台市太白区東郡山2丁目の月極駐車場（22区画）。料金や空き状況を地図で確認できます。">
-
-  <style>
-    body { font-family: sans-serif; margin: 12px; }
-    #map { width: 100%; height: 640px; border: 1px solid #ddd; }
-    h1 { margin-bottom: 8px; }
-  </style>
+<meta charset="utf-8" />
+<title>太白区 東郡山 2丁目 月極駐車場</title>
+<meta name="description" content="仙台市太白区東郡山2丁目の月極駐車場（22区画）。料金や空き状況を地図で確認できます。">
+<style>
+  body { font-family: sans-serif; margin: 12px; }
+  #map { width: 100%; height: 640px; border: 1px solid #ddd; }
+  h1 { margin-bottom: 8px; }
+</style>
 </head>
 <body>
 <h1>太白区 東郡山2丁目 月極駐車場</h1>
@@ -18,8 +17,8 @@
 <script>
 async function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 15,
     center: { lat: 38.221612, lng: 140.900544 },
+    zoom: 15,
     mapTypeId: 'roadmap'
   });
 
@@ -60,24 +59,23 @@ async function initMap() {
       });
 
       marker.addListener('click', () => {
-        infoWindow.setContent(`<strong>${name}</strong><br>` + 
+        infoWindow.setContent(`<strong>${name}</strong><br>` +
                               (url !== '#' ? `<a href="${url}" target="_blank">詳細を見る</a>` : ''));
         infoWindow.open(map, marker);
-        map.panTo(marker.getPosition());
+        map.panTo(marker.getPosition()); // クリック時のみ中心移動
       });
 
       bounds.extend({ lat, lng });
     }
 
-    // マーカーが1つだけなら setCenter + zoom、複数なら fitBounds
-    if (!bounds.isEmpty()) {
-      if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-        map.setCenter(bounds.getCenter());
-        map.setZoom(17); // 1つの場合の固定ズーム
-      } else {
-        map.fitBounds(bounds);
-      }
-    }
+    // マーカーが1つでも fitBounds でズーム連動
+    map.fitBounds(bounds);
+
+    // 必要に応じて最小ズームを設定
+    const listener = google.maps.event.addListener(map, "bounds_changed", function() {
+      if (map.getZoom() > 17) map.setZoom(17);
+      google.maps.event.removeListener(listener);
+    });
 
   } catch (err) {
     console.error(err);
@@ -89,9 +87,10 @@ async function initMap() {
 <script async
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-drkY6XN5ki0nZACX8Fdi-UW8nzK5tzs&callback=initMap">
 </script>
+
 <p>
-    仙台市太白区東郡山 2丁目の月極駐車場です。防犯カメラ設置済みで安心。全22区画 空き区画を確認できます。賃料6,600円  申込はGoogleフォームから可能です。
-  </p>
+仙台市太白区東郡山 2丁目の月極駐車場です。防犯カメラ設置済みで安心。全22区画 空き区画を確認できます。賃料6,600円 申込はGoogleフォームから可能です。
+</p>
 
 </body>
 </html>
