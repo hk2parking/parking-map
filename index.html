@@ -68,14 +68,24 @@ async function initMap() {
       bounds.extend({ lat, lng });
     }
 
-    // マーカーが1つでも fitBounds でズーム連動
-    map.fitBounds(bounds);
+    // マーカーが1つでもズーム連動
+    if (!bounds.isEmpty()) {
+      const ne = bounds.getNorthEast();
+      const sw = bounds.getSouthWest();
 
-    // 必要に応じて最小ズームを設定
-    const listener = google.maps.event.addListener(map, "bounds_changed", function() {
-      if (map.getZoom() > 17) map.setZoom(17);
-      google.maps.event.removeListener(listener);
-    });
+      if (ne.equals(sw)) {
+        // マーカー1つの場合は範囲を少し広げる
+        const latLng = bounds.getCenter();
+        const delta = 0.001; // 約100m程度
+        const pseudoBounds = new google.maps.LatLngBounds(
+          { lat: latLng.lat() - delta, lng: latLng.lng() - delta },
+          { lat: latLng.lat() + delta, lng: latLng.lng() + delta }
+        );
+        map.fitBounds(pseudoBounds);
+      } else {
+        map.fitBounds(bounds);
+      }
+    }
 
   } catch (err) {
     console.error(err);
