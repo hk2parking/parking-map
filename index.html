@@ -16,7 +16,7 @@
 <script>
 async function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 38.221605, lng: 140.900496 },
+    center: { lat: 38.221612, lng: 140.900544 },
     zoom: 15,
     mapTypeId: 'roadmap'
   });
@@ -24,47 +24,37 @@ async function initMap() {
 
   const infoWindow = new google.maps.InfoWindow();
   const bounds = new google.maps.LatLngBounds();
-  let markerCount = 0;
+
+  // マーカー情報を保持（元座標を保持しておく）
+  const markers = []; // { marker: GoogleMarker, lat: number, lng: number, name, url }
 
   try {
     const res = await fetch('parkings.csv');
     if (!res.ok) throw new Error('parkings.csv が読み込めません: ' + res.status);
     const text = await res.text();
-    console.log('parkings.csv loaded, length:', text.length);
+    const lines = text.trim().split(/\r?\n/);
 
-    const lines = text.trim().split('\n');
-    if (lines.length <= 1) {
-      console.warn('CSV にデータがありません（ヘッダーのみ）');
-    }
-
-    // マーカー追加ループ
     for (let i = 1; i < lines.length; i++) {
-      const raw = lines[i].trim();
-      if (!raw) continue;
-      // 簡易CSVパース（カンマがデータに含まれる場合は PapaParse の導入を検討）
-      const cols = raw.split(',');
+      const line = lines[i].trim();
+      if (!line) continue;
+      const cols = line.split(',');
+      if (cols.length < 3) { console.warn('列不足スキップ:', line); continue; }
+
       const name = (cols[0] || '').trim();
       const lat = parseFloat((cols[1] || '').trim());
       const lng = parseFloat((cols[2] || '').trim());
       const url = (cols[3] || '#').trim();
       const status = (cols[4] || '').trim().toLowerCase();
 
-      if (!name) console.warn('名前が空の行:', i, raw);
       if (isNaN(lat) || isNaN(lng)) {
-        console.warn('無効な緯度経度（スキップ）:', i, raw);
+        console.warn('無効な座標をスキップ:', line);
         continue;
       }
-
-      markerCount++;
-      bounds.extend({ lat, lng });
 
       const pinColor = status === 'taken' ? 'red' : (status === 'free' ? 'green' : 'blue');
       const svgMarker = {
         path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z M12 11.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z",
-        fillColor: pinColor,
-        fillOpacity: 1,
-        strokeWeight: 0,
-        scale: 1.6
+        fillColor: pinColor, fillOpacity: 1, strokeWeight: 0, scale: 1.6
       };
 
       const marker = new google.maps.Marker({
@@ -76,36 +66,64 @@ async function initMap() {
 
       marker.addListener('click', () => {
         infoWindow.setContent(`<strong>${escapeHtml(name)}</strong><br>` +
-                              (url && url !== '#' ? `<a href="${escapeHtml(url)}" target="_blank">詳細を見る</a>` : ''));
+          (url && url !== '#' ? `<a href="${escapeHtml(url)}" target="_blank">詳細を見る</a>` : ''));
         infoWindow.open(map, marker);
-        // クリックで地図をセンターに移動（必要ならコメントアウト）
         map.panTo(marker.getPosition());
       });
 
-      console.log('marker added:', markerCount, name, lat, lng, status);
-    } // for
+      // 保存しておく
+      markers.push({ marker, lat, lng, name, url });
+      bounds.extend({ lat, lng });
 
-    console.log('total markers:', markerCount);
-
-    // ★ここがポイント：マーカー数で制御する（boundsの等値判定は使わない）
-    if (markerCount === 0) {
-      console.warn('マーカーが0件です。中心はデフォルトのまま。');
-    } else if (markerCount === 1) {
-      // マーカーが1件のときは center + 固定ズーム
-      const center = bounds.getCenter();
-      console.log('single marker center:', center.toString());
-      map.setCenter(center);
-      map.setZoom(17); // 必要に応じて数字を調整
-      // 少し遅延させてから再パンすると安定する環境もあるので任意で:
-      // setTimeout(()=> map.panTo(center), 250);
-    } else {
-      // マーカーが2件以上のときは fitBounds
-      map.fitBounds(bounds);
+      console.log(`added marker[${markers.length}]:`, name, lat, lng, status);
     }
+
+    // マーカー数に基づきズーム調整
+    if (markers.length === 0) {
+      console.warn('マーカーがありません');
+    } else if (markers.length === 1) {
+      const m = markers[0];
+      map.setCenter({ lat: m.lat, lng: m.lng });
+      map.setZoom(17);
+      console.log('single marker center set:', m.lat, m.lng);
+    } else {
+      map.fitBounds(bounds);
+      console.log('fitBounds applied for', markers.length, 'markers');
+    }
+
+    // --- デバッグ：ズームやidleでマーカー座標をチェックし、異常があれば復元 ---
+    function checkAndFixMarkers() {
+      markers.forEach((item, idx) => {
+        const pos = item.marker.getPosition();
+        const lat = pos.lat();
+        const lng = pos.lng();
+        // ログ（開発時のみ）
+        console.log(`marker[${idx+1}] current:`, lat.toFixed(6), lng.toFixed(6), 'expected:', item.lat, item.lng);
+        // もし表示座標が大きくずれていたら（誤差閾値で判定）、再セットする
+        const latDiff = Math.abs(lat - item.lat);
+        const lngDiff = Math.abs(lng - item.lng);
+        if (latDiff > 0.01 || lngDiff > 0.01) { // 0.01 ~ 約1kmの閾値
+          console.warn(`marker[${idx+1}] appears displaced (latDiff:${latDiff}, lngDiff:${lngDiff}). resetting position.`);
+          item.marker.setPosition({ lat: item.lat, lng: item.lng });
+        }
+      });
+    }
+
+    // map のズームやリサイズ後にチェック（idle は描画完了時）
+    map.addListener('idle', () => {
+      console.log('map idle event');
+      checkAndFixMarkers();
+    });
+    // またズーム変更時もチェック
+    map.addListener('zoom_changed', () => {
+      console.log('map zoom_changed:', map.getZoom());
+      // 少し遅らせてチェック（描画反映待ち）
+      setTimeout(checkAndFixMarkers, 150);
+    });
 
   } catch (err) {
     console.error('initMap error:', err);
-    alert('地図データの読み込みでエラーが発生しました: ' + err.message);
+    alert('地図データ読み込みエラー: ' + err.message);
   }
 }
 
