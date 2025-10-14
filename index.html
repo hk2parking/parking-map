@@ -2,143 +2,86 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <title>太白区 東郡山 2丁目 月極駐車場</title>
-  <meta name="description" content="仙台市太白区東郡山2丁目の月極駐車場（22区画）。">
+  <title>太白区 東郡山2丁目 月極駐車場</title>
+  <meta name="description" content="仙台市太白区東郡山2丁目の月極駐車場（22区画）。料金や空き状況を地図で確認できます。">
   <style>
     body { font-family: sans-serif; margin: 12px; }
-    #map { width: 100%; height: 640px; border: 1px solid #ddd; }
+    #map { width: 100%; height: 640px; border: 1px solid #ccc; }
+    h1 { margin-bottom: 8px; }
   </style>
 </head>
 <body>
-<h1>太白区 東郡山2丁目 月極駐車場</h1>
-<div id="map"></div>
+  <h1>太白区 東郡山2丁目 月極駐車場</h1>
+  <div id="map"></div>
 
-<script>
-async function initMap() {
-  const map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 38.221612, lng: 140.900544 },
-    zoom: 15,
-    mapTypeId: 'roadmap'
-  });
-  console.log('map initialized');
+  <script>
+  async function initMap() {
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
 
-  const infoWindow = new google.maps.InfoWindow();
-  const bounds = new google.maps.LatLngBounds();
+    const map = new Map(document.getElementById("map"), {
+      center: { lat: 38.221612, lng: 140.900544 },
+      zoom: 15,
+      mapId: "DEMO_MAP_ID" // 任意
+    });
 
-  // マーカー情報を保持（元座標を保持しておく）
-  const markers = []; // { marker: GoogleMarker, lat: number, lng: number, name, url }
+    const infoWindow = new google.maps.InfoWindow();
+    const bounds = new google.maps.LatLngBounds();
 
-  try {
     const res = await fetch('parkings.csv');
-    if (!res.ok) throw new Error('parkings.csv が読み込めません: ' + res.status);
     const text = await res.text();
     const lines = text.trim().split(/\r?\n/);
+    const markers = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line) continue;
-      const cols = line.split(',');
-      if (cols.length < 3) { console.warn('列不足スキップ:', line); continue; }
+      const cols = lines[i].split(',');
+      const name = cols[0]?.trim() || ('NoName-'+i);
+      const lat = parseFloat(cols[1]);
+      const lng = parseFloat(cols[2]);
+      const url = cols[3]?.trim() || '#';
+      const status = cols[4]?.trim().toLowerCase();
 
-      const name = (cols[0] || '').trim();
-      const lat = parseFloat((cols[1] || '').trim());
-      const lng = parseFloat((cols[2] || '').trim());
-      const url = (cols[3] || '#').trim();
-      const status = (cols[4] || '').trim().toLowerCase();
+      if (isNaN(lat) || isNaN(lng)) continue;
 
-      if (isNaN(lat) || isNaN(lng)) {
-        console.warn('無効な座標をスキップ:', line);
-        continue;
-      }
+      const color = status === 'taken' ? '#d33' : (status === 'free' ? '#28a745' : '#007bff');
+      const pin = new PinElement({ background: color, borderColor: "#fff", glyphColor: "#fff" });
 
-      const pinColor = status === 'taken' ? 'red' : (status === 'free' ? 'green' : 'blue');
-      const svgMarker = {
-        path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z M12 11.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z",
-        fillColor: pinColor, fillOpacity: 1, strokeWeight: 0, scale: 1.6
-      };
-
-      const marker = new google.maps.Marker({
-        position: { lat, lng },
+      const marker = new AdvancedMarkerElement({
         map,
-        title: name || ('NoName-' + i),
-        icon: svgMarker
+        position: { lat, lng },
+        title: name,
+        content: pin.element
       });
 
-      marker.addListener('click', () => {
-        infoWindow.setContent(`<strong>${escapeHtml(name)}</strong><br>` +
-          (url && url !== '#' ? `<a href="${escapeHtml(url)}" target="_blank">詳細を見る</a>` : ''));
+      marker.addListener("click", () => {
+        infoWindow.setContent(`<strong>${name}</strong><br>` + 
+          (url !== '#' ? `<a href="${url}" target="_blank">詳細を見る</a>` : ''));
         infoWindow.open(map, marker);
-        map.panTo(marker.getPosition());
       });
 
-      // 保存しておく
-      markers.push({ marker, lat, lng, name, url });
+      markers.push(marker);
       bounds.extend({ lat, lng });
-
-      console.log(`added marker[${markers.length}]:`, name, lat, lng, status);
     }
 
-    // マーカー数に基づきズーム調整
-    if (markers.length === 0) {
-      console.warn('マーカーがありません');
-    } else if (markers.length === 1) {
-      const m = markers[0];
-      map.setCenter({ lat: m.lat, lng: m.lng });
-      map.setZoom(17);
-      console.log('single marker center set:', m.lat, m.lng);
-    } else {
+    // ✅ 常に fitBounds（1件でも自動ズーム）
+    if (!bounds.isEmpty()) {
+      const ne = bounds.getNorthEast();
+      const sw = bounds.getSouthWest();
+
+      if (ne.equals(sw)) {
+        const delta = 0.0003;
+        bounds.extend({ lat: ne.lat() + delta, lng: ne.lng() + delta });
+        bounds.extend({ lat: sw.lat() - delta, lng: sw.lng() - delta });
+      }
       map.fitBounds(bounds);
-      console.log('fitBounds applied for', markers.length, 'markers');
     }
-
-    // --- デバッグ：ズームやidleでマーカー座標をチェックし、異常があれば復元 ---
-    function checkAndFixMarkers() {
-      markers.forEach((item, idx) => {
-        const pos = item.marker.getPosition();
-        const lat = pos.lat();
-        const lng = pos.lng();
-        // ログ（開発時のみ）
-        console.log(`marker[${idx+1}] current:`, lat.toFixed(6), lng.toFixed(6), 'expected:', item.lat, item.lng);
-        // もし表示座標が大きくずれていたら（誤差閾値で判定）、再セットする
-        const latDiff = Math.abs(lat - item.lat);
-        const lngDiff = Math.abs(lng - item.lng);
-        if (latDiff > 0.01 || lngDiff > 0.01) { // 0.01 ~ 約1kmの閾値
-          console.warn(`marker[${idx+1}] appears displaced (latDiff:${latDiff}, lngDiff:${lngDiff}). resetting position.`);
-          item.marker.setPosition({ lat: item.lat, lng: item.lng });
-        }
-      });
-    }
-
-    // map のズームやリサイズ後にチェック（idle は描画完了時）
-    map.addListener('idle', () => {
-      console.log('map idle event');
-      checkAndFixMarkers();
-    });
-    // またズーム変更時もチェック
-    map.addListener('zoom_changed', () => {
-      console.log('map zoom_changed:', map.getZoom());
-      // 少し遅らせてチェック（描画反映待ち）
-      setTimeout(checkAndFixMarkers, 150);
-    });
-
-  } catch (err) {
-    console.error('initMap error:', err);
-    alert('地図データ読み込みエラー: ' + err.message);
   }
-}
+  </script>
 
-// HTMLエスケープ
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
-            .replaceAll('"','&quot;').replaceAll("'",'&#39;');
-}
-</script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap&loading=async">
+  </script>
 
-<!-- APIキーはすでに設定済みとのこと。なければ YOUR_API_KEY に差し替え -->
-<script async
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap">
-</script>
-
+  <p>仙台市太白区東郡山 2丁目の月極駐車場です。防犯カメラ設置済みで安心。全22区画 空き区画を確認できます。賃料6,600円 申込はGoogleフォームから可能です。</p>
 </body>
 </html>
