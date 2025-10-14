@@ -21,26 +21,43 @@ async function initMap() {
     zoom: 15,
     mapTypeId: 'roadmap'
   });
+  console.log('map initialized');
 
   const infoWindow = new google.maps.InfoWindow();
   const bounds = new google.maps.LatLngBounds();
+  let markerCount = 0;
 
   try {
     const res = await fetch('parkings.csv');
-    if (!res.ok) throw new Error('CSV読み込み失敗: ' + res.status);
+    if (!res.ok) throw new Error('parkings.csv が読み込めません: ' + res.status);
     const text = await res.text();
+    console.log('parkings.csv loaded, length:', text.length);
+
     const lines = text.trim().split('\n');
+    if (lines.length <= 1) {
+      console.warn('CSV にデータがありません（ヘッダーのみ）');
+    }
 
+    // マーカー追加ループ
     for (let i = 1; i < lines.length; i++) {
-      if (!lines[i].trim()) continue;
-      const cols = lines[i].split(',');
-      const name = cols[0]?.trim() || ('NoName-'+i);
-      const lat = parseFloat(cols[1]);
-      const lng = parseFloat(cols[2]);
-      const url = cols[3]?.trim() || '#';
-      const status = cols[4]?.trim().toLowerCase();
+      const raw = lines[i].trim();
+      if (!raw) continue;
+      // 簡易CSVパース（カンマがデータに含まれる場合は PapaParse の導入を検討）
+      const cols = raw.split(',');
+      const name = (cols[0] || '').trim();
+      const lat = parseFloat((cols[1] || '').trim());
+      const lng = parseFloat((cols[2] || '').trim());
+      const url = (cols[3] || '#').trim();
+      const status = (cols[4] || '').trim().toLowerCase();
 
-      if (isNaN(lat) || isNaN(lng)) continue;
+      if (!name) console.warn('名前が空の行:', i, raw);
+      if (isNaN(lat) || isNaN(lng)) {
+        console.warn('無効な緯度経度（スキップ）:', i, raw);
+        continue;
+      }
+
+      markerCount++;
+      bounds.extend({ lat, lng });
 
       const pinColor = status === 'taken' ? 'red' : (status === 'free' ? 'green' : 'blue');
       const svgMarker = {
@@ -54,53 +71,57 @@ async function initMap() {
       const marker = new google.maps.Marker({
         position: { lat, lng },
         map,
-        title: name,
+        title: name || ('NoName-' + i),
         icon: svgMarker
       });
 
       marker.addListener('click', () => {
-        infoWindow.setContent(`<strong>${name}</strong><br>` +
-                              (url !== '#' ? `<a href="${url}" target="_blank">詳細を見る</a>` : ''));
+        infoWindow.setContent(`<strong>${escapeHtml(name)}</strong><br>` +
+                              (url && url !== '#' ? `<a href="${escapeHtml(url)}" target="_blank">詳細を見る</a>` : ''));
         infoWindow.open(map, marker);
-        map.panTo(marker.getPosition()); // クリック時のみ中心移動
+        // クリックで地図をセンターに移動（必要ならコメントアウト）
+        map.panTo(marker.getPosition());
       });
 
-      bounds.extend({ lat, lng });
-    }
+      console.log('marker added:', markerCount, name, lat, lng, status);
+    } // for
 
-    // マーカーが1つでもズーム連動
-    if (!bounds.isEmpty()) {
-      const ne = bounds.getNorthEast();
-      const sw = bounds.getSouthWest();
+    console.log('total markers:', markerCount);
 
-      if (ne.equals(sw)) {
-        // マーカー1つの場合は範囲を少し広げる
-        const latLng = bounds.getCenter();
-        const delta = 0.001; // 約100m程度
-        const pseudoBounds = new google.maps.LatLngBounds(
-          { lat: latLng.lat() - delta, lng: latLng.lng() - delta },
-          { lat: latLng.lat() + delta, lng: latLng.lng() + delta }
-        );
-        map.fitBounds(pseudoBounds);
-      } else {
-        map.fitBounds(bounds);
-      }
+    // ★ここがポイント：マーカー数で制御する（boundsの等値判定は使わない）
+    if (markerCount === 0) {
+      console.warn('マーカーが0件です。中心はデフォルトのまま。');
+    } else if (markerCount === 1) {
+      // マーカーが1件のときは center + 固定ズーム
+      const center = bounds.getCenter();
+      console.log('single marker center:', center.toString());
+      map.setCenter(center);
+      map.setZoom(17); // 必要に応じて数字を調整
+      // 少し遅延させてから再パンすると安定する環境もあるので任意で:
+      // setTimeout(()=> map.panTo(center), 250);
+    } else {
+      // マーカーが2件以上のときは fitBounds
+      map.fitBounds(bounds);
     }
 
   } catch (err) {
-    console.error(err);
-    alert('地図データ読み込みエラー: ' + err.message);
+    console.error('initMap error:', err);
+    alert('地図データの読み込みでエラーが発生しました: ' + err.message);
   }
+}
+
+// HTMLエスケープ
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+            .replaceAll('"','&quot;').replaceAll("'",'&#39;');
 }
 </script>
 
+<!-- APIキーはすでに設定済みとのこと。なければ YOUR_API_KEY に差し替え -->
 <script async
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap">
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
 </script>
-
-<p>
-仙台市太白区東郡山 2丁目の月極駐車場です。防犯カメラ設置済みで安心。全22区画 空き区画を確認できます。賃料6,600円 申込はGoogleフォームから可能です。
-</p>
 
 </body>
 </html>
