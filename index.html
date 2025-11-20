@@ -67,6 +67,20 @@
       top: 0;
       z-index: 1000;
     }
+    /* FLASH風の点滅アニメーション */
+     .flash-text {
+       font-size: 20px;
+       font-weight: bold;
+       color: #ff0000;
+       animation: flash 0.9s infinite alternate;
+       padding: 4px 8px;
+    }
+
+    /* 点滅効果 */
+     @keyframes flash {
+       0%   { opacity: 0.2; transform: scale(1.0); }
+       100% { opacity: 1.0; transform: scale(1.12); }
+    }
 
     /* ページ全体の余白 */
     main {
@@ -96,6 +110,8 @@
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
     <div id="map"></div>
   </main>
+  
+  <div class="flash-text">空きあります！</div>
 
 　<h1>仙台市太白区 東郡山2丁目 月極駐車場</h1>
   <p>
