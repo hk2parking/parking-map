@@ -1,70 +1,182 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>東郡山2丁目駐車場 空き状況</title>
+<meta charset="UTF-8">
+<title>東郡山2丁目駐車場 空き状況</title>
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 40px;
+}
 
-  <style>
-    body {
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 20px;
-      margin: 40px;
+/* タイトル */
+.header-title {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.parking-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ボタン */
+.spot-btn {
+  width: 150px;
+  height: 60px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: 0.2s;
+}
+.spot-btn:hover { opacity: 0.8; }
+
+.free { background-color: #2ecc71; animation: flashFree 0.8s infinite alternate; }
+@keyframes flashFree {
+  0% { opacity: 0.3; transform: scale(1); box-shadow: 0 0 3px #2ecc71; }
+  100% { opacity: 1; transform: scale(1.12); box-shadow: 0 0 12px #2ecc71; }
+}
+.taken { background-color: #e74c3c; }
+
+.space { width: 200px; }
+.map-image { margin-left: 20px; height: calc(760px + 60px); width: auto; object-fit: contain; }
+
+/* モーダル */
+.modal-bg {
+  display: none;
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  text-align: center;
+}
+.modal-content a {
+  display: block;
+  margin-top: 12px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+.modal-close {
+  margin-top: 15px;
+  padding: 6px 12px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="header-title">東郡山2丁目駐車場 空き状況</div>
+
+<div class="parking-container">
+  <!-- 左列 -->
+  <div class="column left-column">
+    <button class="spot-btn free">23</button>
+    <button class="spot-btn taken">21</button>
+    <button class="spot-btn taken">19</button>
+    <button class="spot-btn free">16</button>
+    <button class="spot-btn taken">13</button>
+    <button class="spot-btn taken">12</button>
+    <button class="spot-btn taken">6</button>
+    <button class="spot-btn taken">5</button>
+    <button class="spot-btn taken">3</button>
+    <button class="spot-btn taken">2</button>
+    <button class="spot-btn taken">1</button>
+  </div>
+
+  <!-- 中央スペース -->
+  <div class="space"></div>
+
+  <!-- 右列 -->
+  <div class="column right-column">
+    <button class="spot-btn free">22</button>
+    <button class="spot-btn taken">20</button>
+    <button class="spot-btn taken">18</button>
+    <button class="spot-btn taken">17</button>
+    <button class="spot-btn taken">15</button>
+    <button class="spot-btn taken">14</button>
+    <button class="spot-btn taken">11</button>
+    <button class="spot-btn taken">10</button>
+    <button class="spot-btn taken">9</button>
+    <button class="spot-btn taken">8</button>
+    <button class="spot-btn taken">7</button>
+  </div>
+
+  <!-- 区画図 -->
+  <img src="kukaku.jpg" alt="区画図" class="map-image">
+</div>
+
+<!-- モーダル -->
+<div class="modal-bg" id="modal">
+  <div class="modal-content" id="modalContent">
+    <div id="modalText"></div>
+    <a href="#" target="_blank" id="modalLink">空き状況確認フォーム</a>
+    <button class="modal-close" id="modalClose">閉じる</button>
+  </div>
+</div>
+
+<script>
+const formUrl = "https://hk2parking.github.io/parking-map/hk2parking-aki.html";
+
+document.querySelectorAll('.spot-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const modal = document.getElementById('modal');
+    const modalText = document.getElementById('modalText');
+    const modalLink = document.getElementById('modalLink');
+
+    const spotNumber = btn.textContent;
+
+    if (btn.classList.contains('free')) {
+      modalText.textContent = `東郡山2丁目駐車場\n車室 ${spotNumber} は現在空きです。`;
+      modalLink.href = formUrl;
+      modalLink.style.display = "block";
+    } else {
+      modalText.textContent = `東郡山2丁目駐車場\n車室 ${spotNumber} は現在契約済みです。`;
+      modalLink.style.display = "none";
     }
 
-    /* 上部タイトル（青＋白文字） */
-    .header-title {
-      width: 100%;
-      background-color: #007bff; /* 青 */
-      color: white;              /* 白文字 */
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-      padding: 20px 0;
-      margin-bottom: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
+    modal.style.display = "flex";
+  });
+});
 
-    .parking-container {
-      display: flex;
-      align-items: flex-start;
-    }
+// モーダル閉じる
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modal').style.display = "none";
+});
+</script>
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    /* ボタン */
-    .spot-btn {
-      width: 150px;
-      height: 60px;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-      font-weight: bold;
-      transition: 0.2s;
-    }
-
-    .spot-btn:hover {
-      opacity: 0.8;
-    }
-
-    /* 空き：FLASH 点滅 */
-    .free {
-      background-color: #2ecc71;
-      animation: flashFree 0.8s infinite alternate;
-    }
-
-    @keyframes flashFree {
-      0% {
-        opacity: 0.3;
-        transform: scale(1.0);
-        box-shadow: 0
+</body>
+</html>
