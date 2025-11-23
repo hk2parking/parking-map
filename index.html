@@ -142,7 +142,7 @@
     <h2>駐車場の特徴</h2>
     <ul>
       <li>月額6600円</li>
-      <li>防犯カメラ設置済みで2台目の保管にも安心</li>
+      <li>防犯カメラが24時間AI監視で2台目の保管にも安心</li>
       <li>アルファード等大型乗用車OK</li>
       <li>24時間出入り可能</li>
       <li>月極・短期契約対応</li>
@@ -188,7 +188,7 @@
         if (isNaN(lat) || isNaN(lng)) continue;
 
         const color = status === 'taken' ? '#d33' : (status === 'free' ? '#28a745' : '#007bff');
-        const pin = new PinElement({ background: color, borderColor: "#fff", glyphColor: "#fff" });
+        const pin = new PinElement({ background: "#FF0000", borderColor: "#fffff", glyphColor: "#fffff" });
 
         const marker = new AdvancedMarkerElement({
           map,
