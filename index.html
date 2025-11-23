@@ -10,7 +10,7 @@
 
   <link rel="canonical" href="https://hk2parking.github.io/parking-map/">
 
-  <!-- OGP -->
+  <!-- OGP設定 -->
   <meta property="og:title" content="仙台市太白区 東郡山2丁目 月極駐車場マップ">
   <meta property="og:description" content="仙台市太白区東郡山2丁目の月極駐車場。料金や空き状況を地図で簡単チェック。防犯カメラ付きで安心。">
   <meta property="og:type" content="website">
@@ -24,7 +24,7 @@
   <meta name="twitter:description" content="仙台市太白区東郡山2丁目の月極駐車場情報。空き状況や料金を地図で確認できます。">
   <meta name="twitter:image" content="https://hk2parking.github.io/parking-map/thumbnail.jpg">
 
-  <!-- 構造化データ -->
+  <!-- schema.org -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -54,124 +54,75 @@
       background: #fafafa;
     }
 
-    /* ★ ナビゲーションバー：中央＋文字拡大 ★ */
+    /* ナビゲーションバー（中央・大きく） */
     nav {
       background-color: #007bff;
       color: white;
       padding: 20px 20px;
       font-size: 26px;
       font-weight: bold;
-      letter-spacing: 1px;
       text-align: center;
+      letter-spacing: 1px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 1000;
     }
 
-    /* FLASHテキスト */
-    .flash-text {
-      font-size: 30px;
-      font-weight: bold;
-      color: #ff0000;
-      animation: flash 0.9s infinite alternate;
-      padding: 40px 80px;
-    }
-
-    .flash-box {
-      background: #ff5050;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      display: inline-block;
-      animation: flashBox 0.6s infinite alternate;
-    }
-
-    @keyframes flashBox {
-      from { opacity: 0.3; box-shadow: 0 0 4px #ff0000; }
-      to   { opacity: 1; box-shadow: 0 0 16px #ff0000; }
-    }
-
-    @keyframes flash {
-      0%   { opacity: 0.2; transform: scale(1.0); }
-      100% { opacity: 1.0; transform: scale(1.12); }
-    }
-
     main {
-      padding: 16px;
+      padding: 12px;
+      padding-top: 6px;
     }
 
+    /* 地図サイズ調整 */
     #map {
       width: 100%;
-      height: 640px;
+      height: 700px;   /* ← ここで地図を縦長に */
       border: 1px solid #ccc;
       border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
     }
 
-    h1 {
-      margin-bottom: 8px;
-      font-size: 20px;
-    }
-
-    /* ★ 空白を1/5に縮める ★ */
-    p {
-      margin-bottom: 4px !important;
-    }
-
-    h2 {
-      margin-top: 8px !important;
-    }
-
-    /* さらに対象部分だけ確実に詰める */
-    #map + h1 + p {
-      margin-bottom: 4px !important;
-    }
-
-    p + h2 {
-      margin-top: 6px !important;
-    }
+    /* 余白を1/5に縮める */
+    p { margin-bottom: 4px; }
+    h2 { margin-top: 10px; margin-bottom: 8px; }
   </style>
 </head>
 
 <body>
-
-  <!-- ナビバー -->
-  <nav>東郡山2丁目駐車場(月極駐車場)</nav>
+  <!-- ナビゲーションバー -->
+  <nav>東郡山2丁目駐車場（月極駐車場）</nav>
 
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
+
+    <!-- 地図は1つに統合 -->
     <div id="map"></div>
+
+    <div class="flash-box">空き有</div>
+
+    <h1>仙台市太白区 東郡山2丁目 月極駐車場</h1>
+    <p>宮城県仙台市太白区東郡山2丁目の月極駐車場です。防犯カメラ完備で、安心してご利用いただけます。<br>
+    地図上で空き状況を確認できます。</p>
+
+    <h2>近隣エリアの月極駐車場</h2>
+    <ul>
+      <li><a href="#">郡山3丁目 月極駐車場</a></li>
+      <li><a href="#">郡山4丁目 月極駐車場</a></li>
+      <li><a href="#">八本松 月極駐車場</a></li>
+      <li><a href="#">鹿又交差点 周辺駐車場</a></li>
+    </ul>
+
+    <h2>駐車場の特徴</h2>
+    <ul>
+      <li>防犯カメラ設置済みで安心</li>
+      <li>区画明確で停めやすい</li>
+      <li>24時間出入り可能</li>
+      <li>月極・短期契約対応</li>
+    </ul>
   </main>
 
-  <div class="flash-box">空き有</div>
-
-  <h1>仙台市太白区 東郡山2丁目 月極駐車場</h1>
-  <p>
-    宮城県仙台市太白区東郡山2丁目の月極駐車場です。防犯カメラ完備で、安心してご利用いただけます。<br>
-    地図上で空き状況を確認できます。
-  </p>
-
-  <div id="map" loading="lazy"></div>
-
-  <h2>近隣エリアの月極駐車場</h2>
-  <ul>
-    <li><a href="#">郡山3丁目 月極駐車場</a></li>
-    <li><a href="#">郡山4丁目 月極駐車場</a></li>
-    <li><a href="#">八本松 月極駐車場</a></li>
-    <li><a href="#">鹿又交差点 周辺駐車場</a></li>
-  </ul>
-
-  <h2>駐車場の特徴</h2>
-  <ul>
-    <li>防犯カメラ設置済みで安心</li>
-    <li>区画明確で停めやすい</li>
-    <li>24時間出入り可能</li>
-    <li>月極・短期契約対応</li>
-  </ul>
-
+  <!-- Google Maps JS -->
   <script>
   async function initMap() {
     const { Map } = await google.maps.importLibrary("maps");
@@ -239,6 +190,7 @@
 
 </body>
 </html>
+
 
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
