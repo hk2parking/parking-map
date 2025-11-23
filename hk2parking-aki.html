@@ -2,20 +2,36 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>東郡山2丁目駐車場 区画図</title>
+  <title>東郡山2丁目駐車場 空き状況</title>
+
   <style>
     body {
       font-family: sans-serif;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;  /* ← 上を揃える */
+      flex-direction: column; /* ← 上部タイトルを使うので追加 */
+      justify-content: flex-start;
+      align-items: center;
       gap: 20px;
       margin: 40px;
     }
 
+    /* ⭐ 上部タイトル（青＋白字） ⭐ */
+    .header-title {
+      width: 100%;
+      background-color: #007bff; /* 青 */
+      color: white;              /* 白文字 */
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      padding: 20px 0;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
     .parking-container {
       display: flex;
-      align-items: flex-start;  /* ← 上端を揃えて固定 */
+      align-items: flex-start;
     }
 
     .column {
@@ -27,7 +43,7 @@
     /* ボタン */
     .spot-btn {
       width: 150px;
-      height: 60px;   /* ← ボタン1個の高さ */
+      height: 60px;
       font-size: 18px;
       border: none;
       border-radius: 6px;
@@ -41,7 +57,7 @@
       opacity: 0.8;
     }
 
-    /* ⭐ 空き：FLASH点滅 ⭐ */
+    /* ⭐ 空き：FLASH 点滅 ⭐ */
     .free {
       background-color: #2ecc71;
       animation: flashFree 0.8s infinite alternate;
@@ -69,20 +85,22 @@
       width: 200px;
     }
 
-    /* ⭐ 画像をボタン列より「1個分」縦長にする ⭐ */
+    /* ⭐ 画像をボタン列より「ボタン1つ分」縦に長くする ⭐ */
     .map-image {
       margin-left: 20px;
-      height: calc(760px + 60px);  
-      /*
-         760px = 現状のボタン列の高さ
-         60px  = ボタン1つ分の高さ（追加）
-      */
+      height: calc(760px + 60px);
       width: auto;
       object-fit: contain;
     }
   </style>
 </head>
 <body>
+
+  <!-- ⭐ 青背景・白文字のタイトル ⭐ -->
+  <div class="header-title">
+    東郡山2丁目駐車場　空き状況
+  </div>
+
   <div class="parking-container">
     <!-- 左列 -->
     <div class="column left-column">
@@ -117,7 +135,7 @@
       <button class="spot-btn taken">7</button>
     </div>
 
-    <!-- 区画図画像（ボタン列より縦に60px長い） -->
+    <!-- 区画図画像（縦を1ボタン分長くした） -->
     <img src="kukaku.jpg" alt="区画図" class="map-image">
   </div>
 
@@ -134,5 +152,6 @@
       });
     });
   </script>
+
 </body>
 </html>
