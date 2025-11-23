@@ -83,6 +83,7 @@
       top: 16px;
       left: 50%;
       transform: translateX(-50%);
+      cursor: pointer;
     }
 
     @keyframes flashBox {
@@ -128,23 +129,15 @@
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
 
-    <!-- 空き有フラッシュ -->
-    <div class="flash-box">空き有</div>
+    <!-- 空き有フラッシュ（クリックで指定URLへ移動） -->
+    <div class="flash-box" onclick="window.location.href='https://hk2parking.github.io/parking-map/hk2parking-aki.html'">
+      空き有
+    </div>
 
     <!-- 地図 -->
     <div id="map"></div>
 
     <p>地図上で空き状況を確認できます。</p>
-
-
-    <h2>駐車場の特徴</h2>
-    <ul>
-      <li>月額6600円</li>
-      <li>防犯カメラ設置済みで2台目の保管にも安心</li>
-      <li>アルファードOK</li>
-      <li>24時間出入り可能</li>
-      <li>月極・短期契約対応</li>
-    </ul>
 
     <h2>近隣エリアの月極駐車場</h2>
     <ul>
@@ -154,6 +147,13 @@
       <li><a href="#">鹿又交差点 周辺駐車場</a></li>
     </ul>
 
+    <h2>駐車場の特徴</h2>
+    <ul>
+      <li>防犯カメラ設置済みで安心</li>
+      <li>区画明確で停めやすい</li>
+      <li>24時間出入り可能</li>
+      <li>月極・短期契約対応</li>
+    </ul>
   </main>
 
   <script>
@@ -222,6 +222,7 @@
   </script>
 </body>
 </html>
+
 
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
