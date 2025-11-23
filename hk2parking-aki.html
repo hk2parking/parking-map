@@ -26,8 +26,8 @@
 
     /* ボタン */
     .spot-btn {
-      width: 150px;       /* 横3倍 */
-      height: 60px;       /* 縦1.5倍 */
+      width: 150px;
+      height: 60px;
       font-size: 18px;
       border: none;
       border-radius: 6px;
@@ -41,17 +41,32 @@
       opacity: 0.8;
     }
 
+    /* ⭐ 空き：FLASH点滅 ⭐ */
     .free {
-      background-color: #2ecc71; /* 緑：空き */
+      background-color: #2ecc71; /* 緑 */
+      animation: flashFree 0.8s infinite alternate;
+    }
+
+    @keyframes flashFree {
+      0% {
+        opacity: 0.3;
+        transform: scale(1.0);
+        box-shadow: 0 0 3px #2ecc71;
+      }
+      100% {
+        opacity: 1.0;
+        transform: scale(1.12);
+        box-shadow: 0 0 12px #2ecc71;
+      }
     }
 
     .taken {
-      background-color: #e74c3c; /* 赤：済 */
+      background-color: #e74c3c;
     }
 
     /* 列間スペース */
     .space {
-      width: 200px; /* ボタン幅(150px)×1倍 */
+      width: 200px;
     }
 
     /* 区画図画像 */
@@ -103,22 +118,15 @@
   </div>
 
   <script>
-    // GoogleフォームのベースURL（自分のフォームに変更）
     const formBaseURL = "https://docs.google.com/forms/d/e/xxxxxxxxxxxx/viewform";
 
-    // 各ボタンのクリック処理
     document.querySelectorAll('.spot-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const spotNumber = btn.textContent;
 
         if (btn.classList.contains('free')) {
-          // 空きの場合：フォームを開く
-          //const fullURL = `${formBaseURL}?entry.123456789=${spotNumber}`;
-          //window.open(fullURL, "_blank");
           alert(`車室${spotNumber} は現在空きです。`);
-
         } else {
-          // 済の場合：アラート
           alert(`車室${spotNumber} は現在契約済みです。`);
         }
       });
