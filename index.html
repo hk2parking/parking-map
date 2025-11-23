@@ -98,7 +98,7 @@
 
     #map {
       width: 100%;
-      height: 480px; /* サイズ調整可能 */
+      height: 480px;
       border: 1px solid #ccc;
       border-radius: 6px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -120,6 +120,13 @@
     li {
       margin-bottom: 2px;
     }
+
+    /* マーカー内のリンク文字は白に */
+    .marker-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -129,7 +136,7 @@
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
 
-    <!-- 空き有フラッシュ（クリックで指定URLに遷移） -->
+    <!-- 空き有フラッシュ -->
     <div class="flash-box" onclick="window.location.href='https://hk2parking.github.io/parking-map/hk2parking-aki.html'">
       空き有
     </div>
@@ -161,7 +168,7 @@
   <script>
   async function initMap() {
     const { Map } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
     const map = new Map(document.getElementById("map"), {
       center: { lat: 38.221612, lng: 140.900544 },
@@ -169,7 +176,6 @@
       mapId: "DEMO_MAP_ID"
     });
 
-    const infoWindow = new google.maps.InfoWindow();
     const bounds = new google.maps.LatLngBounds();
 
     try {
@@ -188,19 +194,25 @@
         if (isNaN(lat) || isNaN(lng)) continue;
 
         const color = status === 'taken' ? '#d33' : (status === 'free' ? '#28a745' : '#007bff');
-        const pin = new PinElement({ background: color, borderColor: "#fff", glyphColor: "#fff" });
 
-        const marker = new AdvancedMarkerElement({
+        const pinElement = document.createElement('div');
+        pinElement.style.background = color;
+        pinElement.style.border = "2px solid #fff";
+        pinElement.style.borderRadius = "8px";
+        pinElement.style.padding = "4px 8px";
+        pinElement.style.textAlign = "center";
+        pinElement.style.cursor = "pointer";
+
+        // 空きの場合はリンク付きで「詳細」、その他は名前表示
+        pinElement.innerHTML = status === 'free'
+          ? `<a href="${url}" target="_blank" class="marker-link">詳細</a>`
+          : name;
+
+        new AdvancedMarkerElement({
           map,
           position: { lat, lng },
           title: name,
-          content: pin.element
-        });
-
-        marker.addListener("click", () => {
-          infoWindow.setContent(`<strong>${name}</strong><br>` +
-            (url !== '#' ? `<a href="${url}" target="_blank" rel="noopener">詳細を見る</a>` : ''));
-          infoWindow.open(map, marker);
+          content: pinElement
         });
 
         bounds.extend({ lat, lng });
@@ -224,7 +236,6 @@
   </script>
 </body>
 </html>
-
 
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
