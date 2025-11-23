@@ -10,7 +10,7 @@
 
   <link rel="canonical" href="https://hk2parking.github.io/parking-map/">
 
-  <!-- ✅ OGP設定（SNS・LINE・Facebook共有対応） -->
+  <!-- OGP -->
   <meta property="og:title" content="仙台市太白区 東郡山2丁目 月極駐車場マップ">
   <meta property="og:description" content="仙台市太白区東郡山2丁目の月極駐車場。料金や空き状況を地図で簡単チェック。防犯カメラ付きで安心。">
   <meta property="og:type" content="website">
@@ -18,13 +18,13 @@
   <meta property="og:image" content="https://hk2parking.github.io/parking-map/thumbnail.jpg">
   <meta property="og:locale" content="ja_JP">
 
-  <!-- ✅ Twitterカード（X共有対策） -->
+  <!-- Twitterカード -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="仙台市太白区 東郡山2丁目 月極駐車場">
   <meta name="twitter:description" content="仙台市太白区東郡山2丁目の月極駐車場情報。空き状況や料金を地図で確認できます。">
   <meta name="twitter:image" content="https://hk2parking.github.io/parking-map/thumbnail.jpg">
 
-  <!-- ✅ 構造化データ（schema.org ParkingFacility） -->
+  <!-- 構造化データ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -54,29 +54,31 @@
       background: #fafafa;
     }
 
-    /* ナビゲーションバー */
+    /* ★ ナビゲーションバー：中央＋文字拡大 ★ */
     nav {
       background-color: #007bff;
       color: white;
-      padding: 12px 20px;
-      font-size: 20px;
+      padding: 20px 20px;
+      font-size: 26px;
       font-weight: bold;
       letter-spacing: 1px;
+      text-align: center;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 1000;
     }
-    /* FLASH風の点滅アニメーション */
-     .flash-text {
-       font-size: 30px;
-       font-weight: bold;
-       color: #ff0000;
-       animation: flash 0.9s infinite alternate;
-       padding: 40px 80px;
+
+    /* FLASHテキスト */
+    .flash-text {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ff0000;
+      animation: flash 0.9s infinite alternate;
+      padding: 40px 80px;
     }
-    /* FLASH風の四角 */
-     .flash-box {
+
+    .flash-box {
       background: #ff5050;
       color: #fff;
       padding: 10px 16px;
@@ -92,14 +94,11 @@
       to   { opacity: 1; box-shadow: 0 0 16px #ff0000; }
     }
 
-
-    /* 点滅効果 */
-     @keyframes flash {
-       0%   { opacity: 0.2; transform: scale(1.0); }
-       100% { opacity: 1.0; transform: scale(1.12); }
+    @keyframes flash {
+      0%   { opacity: 0.2; transform: scale(1.0); }
+      100% { opacity: 1.0; transform: scale(1.12); }
     }
 
-    /* ページ全体の余白 */
     main {
       padding: 16px;
     }
@@ -116,21 +115,40 @@
       margin-bottom: 8px;
       font-size: 20px;
     }
+
+    /* ★ 空白を1/5に縮める ★ */
+    p {
+      margin-bottom: 4px !important;
+    }
+
+    h2 {
+      margin-top: 8px !important;
+    }
+
+    /* さらに対象部分だけ確実に詰める */
+    #map + h1 + p {
+      margin-bottom: 4px !important;
+    }
+
+    p + h2 {
+      margin-top: 6px !important;
+    }
   </style>
 </head>
 
 <body>
-   <!-- ✅ ナビゲーションバー -->
-  <nav>東郡山2丁目駐車場</nav>
+
+  <!-- ナビバー -->
+  <nav>東郡山2丁目駐車場(月極駐車場)</nav>
 
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
     <div id="map"></div>
   </main>
-  
+
   <div class="flash-box">空き有</div>
 
-　<h1>仙台市太白区 東郡山2丁目 月極駐車場</h1>
+  <h1>仙台市太白区 東郡山2丁目 月極駐車場</h1>
   <p>
     宮城県仙台市太白区東郡山2丁目の月極駐車場です。防犯カメラ完備で、安心してご利用いただけます。<br>
     地図上で空き状況を確認できます。
@@ -218,6 +236,10 @@
 
   window.initMap = initMap;
   </script>
+
+</body>
+</html>
+
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
 </body>
