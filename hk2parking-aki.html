@@ -143,14 +143,12 @@ body {
 <div class="modal-bg" id="modal">
   <div class="modal-content" id="modalContent">
     <div id="modalText"></div>
-    <a href="#" target="_blank" id="modalLink">空き状況確認フォーム</a>
+    <a href="hk2parking-main.html" target="_blank" id="modalLink">物件詳細に戻る</a>
     <button class="modal-close" id="modalClose">閉じる</button>
   </div>
 </div>
 
 <script>
-const formUrl = "https://hk2parking.github.io/parking-map/hk2parking-aki.html";
-
 document.querySelectorAll('.spot-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const modal = document.getElementById('modal');
@@ -161,11 +159,10 @@ document.querySelectorAll('.spot-btn').forEach(btn => {
 
     if (btn.classList.contains('free')) {
       modalText.textContent = `東郡山2丁目駐車場\n車室 ${spotNumber} は現在空きです。`;
-      modalLink.href = formUrl;
       modalLink.style.display = "block";
     } else {
       modalText.textContent = `東郡山2丁目駐車場\n車室 ${spotNumber} は現在契約済みです。`;
-      modalLink.style.display = "none";
+      modalLink.style.display = "block"; // 契約済みでもリンク表示
     }
 
     modal.style.display = "flex";
