@@ -165,7 +165,7 @@
 
     const map = new Map(document.getElementById("map"), {
       center: { lat: 38.221612, lng: 140.900544 },
-      zoom: 20,
+      zoom: 17,
       mapId: "DEMO_MAP_ID"
     });
 
@@ -213,7 +213,8 @@
           const delta = 0.0003;
           bounds.extend({ lat: ne.lat() + delta, lng: ne.lng() + delta });
         }
-        map.fitBounds(bounds);
+        map.fitBounds(bounds);      // ← 範囲に合わせる
+        map.setZoom(17);            // ← ★ここに追加（必ず fitBounds の直後）★
       }
     } catch (err) {
       console.error("CSVの読み込みエラー:", err);
