@@ -23,41 +23,13 @@
   <meta name="twitter:description" content="仙台市太白区東郡山2丁目の月極駐車場情報。空き状況や料金を地図で確認できます。">
   <meta name="twitter:image" content="https://hk2parking.github.io/parking-map/thumbnail.jpg">
 
-  <!-- 構造化データ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ParkingFacility",
-    "name": "仙台市太白区 東郡山2丁目 月極駐車場",
-    "description": "仙台市太白区東郡山2丁目の月極駐車場。空き状況や料金、防犯カメラ付き駐車場を地図で確認可能。",
-    "image": "https://hk2parking.github.io/parking-map/thumbnail.jpg",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "JP",
-      "addressRegion": "宮城県",
-      "addressLocality": "仙台市太白区東郡山2丁目"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 38.221612,
-      "longitude": 140.900544
-    },
-    "url": "https://hk2parking.github.io/parking-map/"
-  }
-  </script>
-
   <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      margin: 0;
-      background: #fafafa;
-    }
+    body { font-family: "Segoe UI", sans-serif; margin: 0; background: #fafafa; }
 
-    /* ナビゲーションバー */
     nav {
       background-color: #007bff;
       color: white;
-      padding: 20px 20px;
+      padding: 20px;
       font-size: 28px;
       font-weight: bold;
       letter-spacing: 1px;
@@ -68,7 +40,6 @@
       z-index: 1000;
     }
 
-    /* FLASH風の空き有表示 */
     .flash-box {
       background: #ff5050;
       color: #fff;
@@ -91,10 +62,7 @@
       to   { opacity: 1; box-shadow: 0 0 16px #ff0000; }
     }
 
-    main {
-      padding: 16px;
-      position: relative; /* flash-box の基準 */
-    }
+    main { padding: 16px; position: relative; }
 
     #map {
       width: 100%;
@@ -105,27 +73,34 @@
       margin-bottom: 4px;
     }
 
-    p {
-      margin-bottom: 4px;
-    }
+    p { margin-bottom: 4px; }
 
-    h2 {
-      margin-top: 6px;
-    }
+    h2 { margin-top: 6px; }
 
-    ul {
-      padding-left: 20px;
-    }
+    ul { padding-left: 20px; }
 
-    li {
-      margin-bottom: 2px;
-    }
+    li { margin-bottom: 2px; }
 
     /* マーカー内のリンク文字は白に */
     .marker-link {
       color: white;
       text-decoration: none;
       font-weight: bold;
+    }
+
+    /* 矢印マーカー用 */
+    .arrow-marker {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(50% 0%, 100% 100%, 50% 75%, 0% 100%);
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+      cursor: pointer;
+      border: 2px solid #fff;
     }
   </style>
 </head>
@@ -136,12 +111,10 @@
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
 
-    <!-- 空き有フラッシュ -->
     <div class="flash-box" onclick="window.location.href='https://hk2parking.github.io/parking-map/hk2parking-aki.html'">
       空き有
     </div>
 
-    <!-- 地図 -->
     <div id="map"></div>
 
     <p>空き有ボタンで空き状況を確認できます。</p>
@@ -162,7 +135,6 @@
       <li><a href="#">八本松 月極駐車場</a></li>
       <li><a href="#">鹿又交差点 周辺駐車場</a></li>
     </ul>
-
   </main>
 
   <script>
@@ -196,14 +168,9 @@
         const color = status === 'taken' ? '#d33' : (status === 'free' ? '#28a745' : '#007bff');
 
         const pinElement = document.createElement('div');
+        pinElement.className = status === 'free' ? 'arrow-marker' : '';
         pinElement.style.background = color;
-        pinElement.style.border = "2px solid #fff";
-        pinElement.style.borderRadius = "8px";
-        pinElement.style.padding = "4px 8px";
-        pinElement.style.textAlign = "center";
-        pinElement.style.cursor = "pointer";
 
-        // 空きの場合はリンク付きで「詳細」、その他は名前表示
         pinElement.innerHTML = status === 'free'
           ? `<a href="${url}" target="_blank" class="marker-link">詳細</a>`
           : name;
@@ -236,6 +203,7 @@
   </script>
 </body>
 </html>
+
 
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
