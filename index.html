@@ -216,10 +216,12 @@
           const delta = 0.0003;
           bounds.extend({ lat: ne.lat() + delta, lng: ne.lng() + delta });
         }
-        map.fitBounds(bounds);      // ← 範囲に合わせる
-　　　　
-        map.setZoom(17);            // ← ★ここに追加（必ず fitBounds の直後）★
-      }
+        map.fitBounds(bounds);      // ← 範囲に合わせる　　
+       // --- fitBounds が適用された後に zoom を調整する ---
+　　　　google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+  　　  map.setZoom(17);   // ← 好きな zoom を設定（17だと狭いので16〜15推奨）
+　　});
+  }
     } catch (err) {
       console.error("CSVの読み込みエラー:", err);
     }
