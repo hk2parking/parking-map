@@ -120,6 +120,45 @@
     li {
       margin-bottom: 2px;
     }
+   /* ==== 涙型（Google純正マーカー風）＋ 派手なアニメーション ==== */
+
+   .pin-drop {
+     width: 26px;
+     height: 26px;
+     background: #ff0000;
+     border-radius: 50% 50% 50% 0;
+     position: absolute;
+     transform: rotate(-45deg);
+     left: -13px;  /* 中心補正 */
+     top: -26px;
+     border: 2px solid #fff;
+     box-shadow: 0 0 10px rgba(255,0,0,0.8);
+     animation: pinFlash 0.8s infinite alternate ease-in-out;
+   }
+
+   .pin-drop::after {
+     content: "";
+     width: 10px;
+     height: 10px;
+     background: #fff;
+     border-radius: 50%;
+     position: absolute;
+     top: 7px;
+     left: 7px;
+   }
+
+   /* 光るアニメーション */
+   @keyframes pinFlash {
+     0% {
+       transform: rotate(-45deg) scale(1);
+       box-shadow: 0 0 4px rgba(255,0,0,0.5), 0 0 10px rgba(255,0,0,0.3);
+     }
+     100% {
+       transform: rotate(-45deg) scale(1.25);
+       box-shadow: 0 0 12px rgba(255,0,0,0.9), 0 0 26px rgba(255,0,0,0.8);
+     }
+   }
+
   </style>
 </head>
 
@@ -191,13 +230,15 @@
         if (isNaN(lat) || isNaN(lng)) continue;
 
         const color = status === 'taken' ? '#d33' : (status === 'free' ? '#28a745' : '#007bff');
-        const pin = new PinElement({ background: "#FF0000", borderColor: "#fffff", glyphColor: "#fffff" });
+        const pinDiv = document.createElement("div");
+        pinDiv.className = "pin-drop";
+
 
         const marker = new AdvancedMarkerElement({
           map,
           position: { lat, lng },
           title: name,
-          content: pin.element
+          content: pinDiv
         });
 
         marker.addListener("click", () => {
