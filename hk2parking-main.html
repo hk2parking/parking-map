@@ -63,7 +63,30 @@
       50% { opacity: 0; }
     }
     /* ▲▲ ここまで追加 ▲▲ */
+   
+    /* ボタン共通 */
+    a.button {
+      display: inline-block;
+      padding: 10px 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      text-decoration: none !important;  /* ← 下線を完全に消す */
+      color: white !important;           /* ← 文字色を強制的に白にする */
+    }
 
+    /* Googleフォームを開く → 青 */
+    .form-button {
+      background-color: #007bff !important;
+    }
+
+    /* 地図に戻る → 普通のリンク（背景なし・黒字） */
+    .back-link {
+      background: none !important;
+      color: black !important;
+      text-decoration: underline;   /* 必要なら下線を外してもOK */
+      padding: 0 !important;
+      font-weight: normal;
+    }
   </style>
 </head>
 <body>
@@ -102,10 +125,20 @@
     <!-- ▲ 点滅部分ここまで ▲ -->
     <br><br>
 
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeMoWYK5mWNbSyHo5U3U5iX0-_AAMc9Uj_PO4EXyD3jOZXBKQ/viewform?usp=header" target="_blank">
+    <!-- Googleフォームを開く（青） -->
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeMoWYK5mWNbSyHo5U3U5iX0-_AAMc9Uj_PO4EXyD3jOZXBKQ/viewform?usp=header"
+       target="_blank"
+       class="button form-button">
       ▶ Googleフォームを開く
     </a>
-  </p>
+
+    <br><br>
+
+    <!-- 地図に戻る（普通の黒字リンク） -->
+    <a href="index.html" class="back-link">
+      ← 地図に戻る
+    </a>
+      </p>
 
   <a href="index.html" class="back">← 地図に戻る</a>
 </body>
