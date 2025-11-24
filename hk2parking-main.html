@@ -5,15 +5,15 @@
   <title>東郡山2丁目駐車場 | 東郡山2丁目駐車場 詳細</title>
   <style>
     body { font-family: sans-serif; margin: 20px; }
-    
+
     /* タイトルを青背景・白文字・中央寄せに */
     h1 {
       border-bottom: 2px solid #333;
       padding: 15px 20px;
-      background-color: #007bff; /* 青背景 */
-      color: white;              /* 白文字 */
-      text-align: center;        /* 中央寄せ */
-      border-radius: 6px;        /* 角丸 */
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
     }
 
     h2 { margin-top: 30px; }
@@ -51,32 +51,38 @@
     }
     /* ▲▲ 点滅ここまで ▲▲ */
 
-    /* ▼▼ 写真と区画図を左右半分に並べ、高さを揃える ▼▼ */
+
+    /* ▼▼ 写真と区画図を左右に必ず並べ、高さ揃え ▼▼ */
+
     .photo-row {
       display: flex;
       justify-content: space-between;
-      align-items: stretch;   /* ← 高さを揃えるポイント */
+      align-items: stretch;
       gap: 20px;
       margin-bottom: 30px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;  /* ← 強制横並び（折り返さない） */
     }
 
     .half-photo {
-      width: 50%;
-      height: 350px;          /* ← 高さを揃える（調整可） */
-      object-fit: cover;      /* ← トリミングして高さを揃える */
+      width: calc(50% - 10px); /* gap 分10pxを相殺し横幅100%以内に収める */
+      height: 350px;           /* ← 高さを揃える（必要あれば変更可） */
+      object-fit: cover;       /* ← 中央トリミングで綺麗に揃う */
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
-    /* スマホでは縦並びにする */
+    /* スマホでは縦並び */
     @media (max-width: 700px) {
+      .photo-row {
+        flex-wrap: wrap;
+      }
       .half-photo {
         width: 100%;
         height: auto;
         object-fit: contain;
       }
     }
+
     /* ▲▲ 横並び＆高さ揃えここまで ▲▲ */
 
   </style>
@@ -112,14 +118,14 @@
   <p>
     下記フォームからお申し込み・お問い合わせ・ご予約ください。<br><br>
 
-    <!-- ▼ 点滅させたい警告文 ▼ -->
+    <!-- ▼ 点滅する重要文言 ▼ -->
     <span class="blink" style="color: red; font-size: 2em; font-weight: bold;">
       内見をされる前に必ずフォームからご予約ください。<br>
       契約車以外の侵入は防犯システムが作動し通報されます。
     </span>
     <!-- ▲ 点滅ここまで ▲ -->
-    <br><br>
 
+    <br><br>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSeMoWYK5mWNbSyHo5U3U5iX0-_AAMc9Uj_PO4EXyD3jOZXBKQ/viewform?usp=header" target="_blank">
       ▶ Googleフォームを開く
     </a>
