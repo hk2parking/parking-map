@@ -217,6 +217,8 @@
           bounds.extend({ lat: ne.lat() + delta, lng: ne.lng() + delta });
         }
         map.fitBounds(bounds);      // ← 範囲に合わせる
+　　　　// ⭐ ここで fitBounds 後のズームを強制的に 17 に固定 ⭐
+  　　　map.addListener("idle", () => {
         map.setZoom(17);            // ← ★ここに追加（必ず fitBounds の直後）★
       }
     } catch (err) {
