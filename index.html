@@ -93,72 +93,54 @@
 
     main {
       padding: 16px;
-      position: relative; /* flash-box の基準 */
+      position: relative;
     }
 
     #map {
       width: 100%;
-      height: 480px; /* サイズ調整可能 */
+      height: 480px;
       border: 1px solid #ccc;
       border-radius: 6px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       margin-bottom: 4px;
     }
 
-    p {
-      margin-bottom: 4px;
+    /* ==== 涙型マーカー ==== */
+    .pin-drop {
+      width: 26px;
+      height: 26px;
+      background: #ff0000;
+      border-radius: 50% 50% 50% 0;
+      position: absolute;
+      transform: rotate(-45deg);
+      left: -13px;
+      top: -26px;
+      border: 2px solid #fff;
+      box-shadow: 0 0 10px rgba(255,0,0,0.8);
+      animation: pinFlash 0.8s infinite alternate ease-in-out;
     }
 
-    h2 {
-      margin-top: 6px;
+    .pin-drop::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 7px;
+      left: 7px;
     }
 
-    ul {
-      padding-left: 20px;
+    @keyframes pinFlash {
+      0% {
+        transform: rotate(-45deg) scale(1);
+        box-shadow: 0 0 4px rgba(255,0,0,0.5), 0 0 10px rgba(255,0,0,0.3);
+      }
+      100% {
+        transform: rotate(-45deg) scale(1.25);
+        box-shadow: 0 0 12px rgba(255,0,0,0.9), 0 0 26px rgba(255,0,0,0.8);
+      }
     }
-
-    li {
-      margin-bottom: 2px;
-    }
-   /* ==== 涙型（Google純正マーカー風）＋ 派手なアニメーション ==== */
-
-   .pin-drop {
-     width: 26px;
-     height: 26px;
-     background: #ff0000;
-     border-radius: 50% 50% 50% 0;
-     position: absolute;
-     transform: rotate(-45deg);
-     left: -13px;  /* 中心補正 */
-     top: -26px;
-     border: 2px solid #fff;
-     box-shadow: 0 0 10px rgba(255,0,0,0.8);
-     animation: pinFlash 0.8s infinite alternate ease-in-out;
-   }
-
-   .pin-drop::after {
-     content: "";
-     width: 10px;
-     height: 10px;
-     background: #fff;
-     border-radius: 50%;
-     position: absolute;
-     top: 7px;
-     left: 7px;
-   }
-
-   /* 光るアニメーション */
-   @keyframes pinFlash {
-     0% {
-       transform: rotate(-45deg) scale(1);
-       box-shadow: 0 0 4px rgba(255,0,0,0.5), 0 0 10px rgba(255,0,0,0.3);
-     }
-     100% {
-       transform: rotate(-45deg) scale(1.25);
-       box-shadow: 0 0 12px rgba(255,0,0,0.9), 0 0 26px rgba(255,0,0,0.8);
-     }
-   }
-
   </style>
 </head>
 
@@ -168,12 +150,10 @@
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
 
-    <!-- 空き有フラッシュ（クリックで指定URLに遷移） -->
     <div class="flash-box" onclick="window.location.href='https://hk2parking.github.io/parking-map/hk2parking-aki.html'">
       空き有
     </div>
 
-    <!-- 地図 -->
     <div id="map"></div>
 
     <p>空き有ボタンで空き状況を確認できます。</p>
@@ -186,8 +166,8 @@
       <li>アルファード等大型乗用車OK</li>
       <li>24時間出入り可能</li>
       <li>月極</li>
-　　　<li>大型バイク屋根応相談</li>     
-　　　<li>短期契約応相談</li>
+      <li>大型バイク屋根応相談</li>
+      <li>短期契約応相談</li>
     </ul>
 
     <h2>近隣エリアの月極駐車場</h2>
@@ -203,7 +183,7 @@
   <script>
   async function initMap() {
     const { Map } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
     const map = new Map(document.getElementById("map"), {
       center: { lat: 38.221612, lng: 140.900544 },
@@ -219,8 +199,11 @@
       const text = await res.text();
       const lines = text.trim().split(/\r?\n/);
 
+      const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(',');
+
         const name = cols[0]?.trim() || ('NoName-' + i);
         const lat = parseFloat(cols[1]);
         const lng = parseFloat(cols[2]);
@@ -229,10 +212,8 @@
 
         if (isNaN(lat) || isNaN(lng)) continue;
 
-        const color = status === 'taken' ? '#d33' : (status === 'free' ? '#28a745' : '#007bff');
         const pinDiv = document.createElement("div");
         pinDiv.className = "pin-drop";
-
 
         const marker = new AdvancedMarkerElement({
           map,
@@ -241,28 +222,40 @@
           content: pinDiv
         });
 
-        marker.addListener("click", () => {
-          infoWindow.setContent(`<strong>${name}</strong><br>` +
-            (url !== '#' ? `<a href="${url}" target="_blank" rel="noopener">詳細を見る</a>` : ''));
+        // 🎯 ホバー（PC）・クリック（スマホ）両対応
+        const showPopup = () => {
+          infoWindow.setContent(`
+            <div style="font-size:14px; max-width:220px;">
+              <img src="https://hk2parking.github.io/parking-map/thumbnail.jpg"
+                   style="width:100%; border-radius:6px; margin-bottom:6px;">
+              <strong>${name}</strong><br>
+              <p style="margin:4px 0;">
+                月額6600円・防犯カメラ24h・大型車可
+              </p>
+              ${url !== '#' ? `<a href="${url}" target="_blank">詳細を見る</a>` : ''}
+            </div>
+          `);
           infoWindow.open(map, marker);
-        });
+        };
+
+        if (isMobile) {
+          marker.addListener("click", showPopup);
+        } else {
+          marker.addListener("mouseenter", showPopup);
+          marker.addListener("mouseleave", () => infoWindow.close());
+        }
 
         bounds.extend({ lat, lng });
       }
 
       if (!bounds.isEmpty()) {
-        const ne = bounds.getNorthEast();
-        const sw = bounds.getSouthWest();
-        if (ne.equals(sw)) {
-          const delta = 0.0003;
-          bounds.extend({ lat: ne.lat() + delta, lng: ne.lng() + delta });
-        }
-        map.fitBounds(bounds);      // ← 範囲に合わせる　　
-       // --- fitBounds が適用された後に zoom を調整する ---
-　　　　google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-  　　  map.setZoom(17);   // ← 好きな zoom を設定（17だと狭いので16〜15推奨）
-　　});
-  }
+        map.fitBounds(bounds);
+
+        google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+          map.setZoom(17);
+        });
+      }
+
     } catch (err) {
       console.error("CSVの読み込みエラー:", err);
     }
@@ -272,6 +265,7 @@
   </script>
 </body>
 </html>
+
 　
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
 </body>
