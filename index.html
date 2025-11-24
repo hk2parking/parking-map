@@ -55,12 +55,13 @@
   </main>
 
   <script>
-    let greenMarkers = []; // 点滅対象の緑マーカー
+    let greenMarkers = [];
     let pulseStep = 0;
     let pulseDirection = 1;
 
     function initMap() {
       const center = { lat: 38.221612, lng: 140.900544 };
+      const offsetLat = 0.00005; // 緑マーカーを少し上にずらす
 
       // 地図
       const map = new google.maps.Map(document.getElementById("map"), {
@@ -75,7 +76,7 @@
       );
       map.setStreetView(panorama);
 
-      // CSVからマーカーを生成
+      // CSVからマーカー生成
       fetch('parkings.csv')
         .then(res => res.text())
         .then(text => {
@@ -83,15 +84,17 @@
           for(let i=1; i<lines.length; i++){
             const cols = lines[i].split(',');
             const name = cols[0]?.trim() || 'NoName-' + i;
-            const lat = parseFloat(cols[1]);
+            let lat = parseFloat(cols[1]);
             const lng = parseFloat(cols[2]);
             const url = cols[3]?.trim() || '#';
             const status = cols[4]?.trim().toLowerCase();
             if(isNaN(lat)||isNaN(lng)) continue;
 
             const color = status==='taken'?'red':'green';
+            if(color==='green') lat += offsetLat; // 上にずらす
+
             const marker = new google.maps.Marker({
-              position: {lat, lng},
+              position: { lat, lng },
               map,
               title: name,
               icon: {
@@ -104,18 +107,19 @@
               }
             });
 
-            if(color === 'green') greenMarkers.push(marker);
+            if(color==='green') greenMarkers.push(marker);
 
             const infowindow = new google.maps.InfoWindow();
             marker.addListener('click', () => {
-              infowindow.setContent(`<strong>${name}</strong><br>` + (url!=='#'?`<a href="${url}" target="_blank">詳細を見る</a>`:''));
+              infowindow.setContent(`<strong>${name}</strong><br>` + 
+                (url!=='#'?`<a href="${url}" target="_blank">詳細を見る</a>`:''));
               infowindow.open(map, marker);
             });
           }
         })
         .catch(err => console.error(err));
 
-      // 点滅アニメーション
+      // 緑マーカーの点滅アニメーション
       setInterval(() => {
         pulseStep += pulseDirection * 0.3;
         if(pulseStep > 4 || pulseStep < 0) pulseDirection *= -1;
@@ -127,6 +131,13 @@
       }, 100);
     }
   </script>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  </script>
+</body>
+</html>
+
 
   <script async
     src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
