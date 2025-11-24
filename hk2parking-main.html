@@ -3,63 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <title>東郡山2丁目駐車場 | 東郡山2丁目駐車場 詳細</title>
-
   <style>
     body { font-family: sans-serif; margin: 20px; }
+    
+    /* タイトルを青背景・白文字・中央寄せに */
+    h1 {
+      border-bottom: 2px solid #333;
+      padding: 15px 20px;
+      background-color: #007bff; /* 青背景 */
+      color: white;              /* 白文字 */
+      text-align: center;        /* 中央寄せ */
+      border-radius: 6px;        /* 角丸 */
+    }
 
-    /* 2枚の画像を横並びにする枠 */
+    h2 { margin-top: 30px; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    th { background: #f5f5f5; width: 30%; }
+
+    .back, .check-status {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 16px;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .back { background: #0078ff; }
+    .check-status { background: #f39c12; margin-bottom: 10px; }
+
+    /* ▼▼ 点滅アニメーション ▼▼ */
+    .blink {
+      animation: blink 2s step-start infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    /* ▲▲ 点滅ここまで ▲▲ */
+
+    /* ▼▼ 写真と区画図を左右半分に並べ、高さを揃える ▼▼ */
     .photo-row {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: stretch;   /* ← 高さを揃えるポイント */
       gap: 20px;
       margin-bottom: 30px;
+      flex-wrap: wrap;
     }
 
-    /* 左画像（高さを揃えたい場合はこちらは固定OK） */
-    .left-photo {
+    .half-photo {
       width: 50%;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      object-fit: cover;
-      height: 350px;
-    }
-
-    /* 右の kukaku（全体表示 最優先） */
-    .right-photo {
-      width: 50%;        /* 横幅だけ50%に制限 */
-      height: auto;      /* ← 最重要：絶対に固定しない */
-      object-fit: contain;
+      height: 350px;          /* ← 高さを揃える（調整可） */
+      object-fit: cover;      /* ← トリミングして高さを揃える */
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
-    /* スマホ時：縦並び＋全体表示 */
+    /* スマホでは縦並びにする */
     @media (max-width: 700px) {
-      .photo-row {
-        flex-direction: column;
-      }
-      .left-photo, .right-photo {
+      .half-photo {
         width: 100%;
         height: auto;
         object-fit: contain;
       }
     }
+    /* ▲▲ 横並び＆高さ揃えここまで ▲▲ */
+
   </style>
-
 </head>
-
 <body>
+  <h1>仙台市太白区 東郡山2丁目駐車場</h1>
 
-  <h2>写真と区画図</h2>
+  <h2>東郡山2丁目駐車場 写真・区画図</h2>
 
+  <!-- ▼ 写真と区画図を左右に並べて高さ揃え ▼ -->
   <div class="photo-row">
-    <!-- 左の写真 -->
-    <img src="zenkei.jpg" class="left-photo" alt="全景">
-
-    <!-- 右の kukaku 写真（絶対に切れない） -->
-    <img src="kukaku.jpg" class="right-photo" alt="区画図">
+    <img src="zenkei.jpg" alt="東郡山2丁目駐車場全景" class="half-photo">
+    <img src="kukaku.jpg" alt="太白区東郡山2丁目 月極駐車場 区画図" class="half-photo">
   </div>
+  <!-- ▲ ここまで横並び＆高さ揃え ▲ -->
 
+  <h2>基本情報</h2>
+  <table>
+    <tr><th>賃料</th><td>6600円</td></tr>
+    <tr><th>所在地</th><td>仙台市太白区東郡山２丁目１０−</td></tr>
+    <tr><th>物件種目</th><td>月極駐車場</td></tr>
+    <tr><th>取引態様</th><td>貸主</td></tr>
+    <tr><th>敷金</th><td>1ヶ月</td></tr>
+    <tr><th>仲介がある場合の仲介手数料</th><td>1ヶ月</td></tr>
+    <tr><th>備考</th><td>審査有</td></tr>
+    <tr><th>情報更新日</th><td>2025年11月24日</td></tr>
+  </table>
+
+  <!-- 空状況確認ボタン -->
+  <a href="hk2parking-aki.html" class="check-status">▶ 空状況を確認する</a>
+
+  <h2>申込・問い合わせ・内見予約</h2>
+  <p>
+    下記フォームからお申し込み・お問い合わせ・ご予約ください。<br><br>
+
+    <!-- ▼ 点滅させたい警告文 ▼ -->
+    <span class="blink" style="color: red; font-size: 2em; font-weight: bold;">
+      内見をされる前に必ずフォームからご予約ください。<br>
+      契約車以外の侵入は防犯システムが作動し通報されます。
+    </span>
+    <!-- ▲ 点滅ここまで ▲ -->
+    <br><br>
+
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeMoWYK5mWNbSyHo5U3U5iX0-_AAMc9Uj_PO4EXyD3jOZXBKQ/viewform?usp=header" target="_blank">
+      ▶ Googleフォームを開く
+    </a>
+  </p>
+
+  <a href="index.html" class="back">← 地図に戻る</a>
 </body>
 </html>
