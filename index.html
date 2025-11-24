@@ -53,19 +53,21 @@
       background: #fafafa;
     }
 
-    /* ナビゲーションバー */
     nav {
       background-color: #007bff;
       color: white;
       padding: 20px;
       font-size: 28px;
       font-weight: bold;
-      letter-spacing: 1px;
       text-align: center;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 1000;
+    }
+
+    main {
+      padding: 16px;
     }
 
     /* FLASH風の空き有表示 */
@@ -78,12 +80,8 @@
       font-weight: bold;
       display: inline-block;
       animation: flashBox 0.6s infinite alternate;
-      z-index: 10;
-      position: absolute;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
       cursor: pointer;
+      margin-bottom: 12px;
     }
 
     @keyframes flashBox {
@@ -91,18 +89,19 @@
       to   { opacity: 1; box-shadow: 0 0 16px #ff0000; }
     }
 
-    main {
-      padding: 16px;
-      position: relative; /* flash-box の基準 */
+    /* 地図とストリートビューを左右に配置 */
+    .map-street-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    #map {
-      width: 100%;
-      height: 480px; /* サイズ調整可能 */
+    #map, #street-view {
+      flex: 1 1 48%;
+      height: 480px;
       border: 1px solid #ccc;
       border-radius: 6px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 4px;
     }
 
     p {
@@ -110,7 +109,7 @@
     }
 
     h2 {
-      margin-top: 6px;
+      margin-top: 12px;
     }
 
     ul {
@@ -121,7 +120,6 @@
       margin-bottom: 2px;
     }
 
-    /* 涙型マーカー風 */
     .pin-drop {
       width: 26px;
       height: 26px;
@@ -166,13 +164,15 @@
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
 
-    <!-- 空き有フラッシュ -->
     <div class="flash-box" onclick="window.location.href='https://hk2parking.github.io/parking-map/hk2parking-aki.html'">
       空き有
     </div>
 
-    <!-- 地図 -->
-    <div id="map"></div>
+    <!-- 左右に地図とストリートビュー -->
+    <div class="map-street-container">
+      <div id="map"></div>
+      <div id="street-view"></div>
+    </div>
 
     <p>空き有ボタンで空き状況を確認できます。</p>
 
@@ -199,7 +199,7 @@
 
   <script>
     async function initMap() {
-      const { Map } = await google.maps.importLibrary("maps");
+      const { Map, StreetViewPanorama } = await google.maps.importLibrary("maps");
       const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
       const map = new Map(document.getElementById("map"), {
@@ -207,6 +207,17 @@
         zoom: 17,
         mapId: "DEMO_MAP_ID"
       });
+
+      const streetView = new StreetViewPanorama(
+        document.getElementById("street-view"),
+        {
+          position: { lat: 38.221612, lng: 140.900544 },
+          pov: { heading: 34, pitch: 10 },
+          zoom: 1
+        }
+      );
+
+      map.setStreetView(streetView);
 
       const infoWindow = new google.maps.InfoWindow();
       const bounds = new google.maps.LatLngBounds();
@@ -246,14 +257,7 @@
         }
 
         if (!bounds.isEmpty()) {
-          const ne = bounds.getNorthEast();
-          const sw = bounds.getSouthWest();
-          if (ne.equals(sw)) {
-            const delta = 0.0003;
-            bounds.extend({ lat: ne.lat() + delta, lng: ne.lng() + delta });
-          }
           map.fitBounds(bounds);
-
           google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
             map.setZoom(17);
           });
@@ -267,6 +271,7 @@
   </script>
 </body>
 </html>
+
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
 </body>
