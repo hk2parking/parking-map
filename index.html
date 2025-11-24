@@ -55,6 +55,10 @@
   </main>
 
   <script>
+    let greenMarkers = []; // 点滅対象の緑マーカー
+    let pulseStep = 0;
+    let pulseDirection = 1;
+
     function initMap() {
       const center = { lat: 38.221612, lng: 140.900544 };
 
@@ -67,11 +71,7 @@
       // ストリートビュー
       const panorama = new google.maps.StreetViewPanorama(
         document.getElementById("street-view"),
-        {
-          position: center,
-          pov: { heading: 34, pitch: 10 },
-          zoom: 1
-        }
+        { position: center, pov: { heading: 34, pitch: 10 }, zoom: 1 }
       );
       map.setStreetView(panorama);
 
@@ -104,6 +104,8 @@
               }
             });
 
+            if(color === 'green') greenMarkers.push(marker);
+
             const infowindow = new google.maps.InfoWindow();
             marker.addListener('click', () => {
               infowindow.setContent(`<strong>${name}</strong><br>` + (url!=='#'?`<a href="${url}" target="_blank">詳細を見る</a>`:''));
@@ -112,14 +114,25 @@
           }
         })
         .catch(err => console.error(err));
+
+      // 点滅アニメーション
+      setInterval(() => {
+        pulseStep += pulseDirection * 0.3;
+        if(pulseStep > 4 || pulseStep < 0) pulseDirection *= -1;
+        greenMarkers.forEach(m => {
+          const icon = m.getIcon();
+          icon.scale = 10 + pulseStep;
+          m.setIcon(icon);
+        });
+      }, 100);
     }
   </script>
+
   <script async
     src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
   </script>
 </body>
 </html>
-
 
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
