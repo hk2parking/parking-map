@@ -1,159 +1,278 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<title>東郡山2丁目駐車場 | 仙台市太白区 月極駐車場</title>
-<style>
-  body { margin: 0; font-family: "Segoe UI", sans-serif; }
-  nav {
-    background-color: #007bff;
-    color: white;
-    padding: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+  <meta charset="utf-8" />
+  <title>東郡山2丁目駐車場 | 仙台市太白区 月極駐車場</title>
+
+  <meta name="description" content="東郡山2丁目駐車場　仙台市太白区東郡山2丁目(宮城県)の月極駐車場。防犯カメラ24時間駐車場を地図で確認。郡山3丁目・郡山4丁目・八本松・鹿又交差点周辺の月極駐車場情報も掲載。料金・空き状況をリアルタイムでチェック。">
+  <meta name="keywords" content="東郡山2丁目駐車場,仙台市,太白区,月極駐車場,24時間防犯カメラ作動駐車場">
+
+  <link rel="canonical" href="https://hk2parking.github.io/parking-map/">
+
+  <!-- OGP -->
+  <meta property="og:title" content="仙台市太白区 東郡山2丁目 月極駐車場マップ">
+  <meta property="og:description" content="仙台市太白区東郡山2丁目の月極駐車場。料金や空き状況を地図で簡単チェック。防犯カメラ付きで安心。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hk2parking.github.io/parking-map/">
+  <meta property="og:image" content="https://hk2parking.github.io/parking-map/thumbnail.jpg">
+  <meta property="og:locale" content="ja_JP">
+
+  <!-- Twitterカード -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="仙台市太白区 東郡山2丁目 月極駐車場">
+  <meta name="twitter:description" content="仙台市太白区東郡山2丁目の月極駐車場情報。空き状況や料金を地図で確認できます。">
+  <meta name="twitter:image" content="https://hk2parking.github.io/parking-map/thumbnail.jpg">
+
+  <!-- 構造化データ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ParkingFacility",
+    "name": "仙台市太白区 東郡山2丁目 月極駐車場",
+    "description": "仙台市太白区東郡山2丁目の月極駐車場。空き状況や料金、防犯カメラ付き駐車場を地図で確認可能。",
+    "image": "https://hk2parking.github.io/parking-map/thumbnail.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "JP",
+      "addressRegion": "宮城県",
+      "addressLocality": "仙台市太白区東郡山2丁目"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 38.221612,
+      "longitude": 140.900544
+    },
+    "url": "https://hk2parking.github.io/parking-map/"
   }
-  main { padding: 16px; }
-  .flash-box {
-    background: #ff5050;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 20px;
-    font-weight: bold;
-    display: inline-block;
-    animation: flashBox 0.6s infinite alternate;
-    cursor: pointer;
-    margin-bottom: 12px;
-  }
-  @keyframes flashBox {
-    from { opacity: 0.3; box-shadow: 0 0 4px #ff0000; }
-    to   { opacity: 1; box-shadow: 0 0 16px #ff0000; }
-  }
-  .map-street-container {
-    display: flex;
-    gap: 16px;
-  }
-  #map, #street-view {
-    flex: 1 1 48%;
-    height: 480px;
-  }
-</style>
+  </script>
+
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      background: #fafafa;
+    }
+
+    /* ナビゲーションバー */
+    nav {
+      background-color: #007bff;
+      color: white;
+      padding: 20px 20px;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    /* FLASH風の空き有表示 */
+    .flash-box {
+      background: #ff5050;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      display: inline-block;
+      animation: flashBox 0.6s infinite alternate;
+      z-index: 10;
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+    }
+
+    @keyframes flashBox {
+      from { opacity: 0.3; box-shadow: 0 0 4px #ff0000; }
+      to   { opacity: 1; box-shadow: 0 0 16px #ff0000; }
+    }
+
+    main {
+      padding: 16px;
+      position: relative; /* flash-box の基準 */
+    }
+
+    #map {
+      width: 100%;
+      height: 480px; /* サイズ調整可能 */
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 4px;
+    }
+
+    p {
+      margin-bottom: 4px;
+    }
+
+    h2 {
+      margin-top: 6px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 2px;
+    }
+   /* ==== 涙型（Google純正マーカー風）＋ 派手なアニメーション ==== */
+
+   .pin-drop {
+     width: 26px;
+     height: 26px;
+     background: #ff0000;
+     border-radius: 50% 50% 50% 0;
+     position: absolute;
+     transform: rotate(-45deg);
+     left: -13px;  /* 中心補正 */
+     top: -26px;
+     border: 2px solid #fff;
+     box-shadow: 0 0 10px rgba(255,0,0,0.8);
+     animation: pinFlash 0.8s infinite alternate ease-in-out;
+   }
+
+   .pin-drop::after {
+     content: "";
+     width: 10px;
+     height: 10px;
+     background: #fff;
+     border-radius: 50%;
+     position: absolute;
+     top: 7px;
+     left: 7px;
+   }
+
+   /* 光るアニメーション */
+   @keyframes pinFlash {
+     0% {
+       transform: rotate(-45deg) scale(1);
+       box-shadow: 0 0 4px rgba(255,0,0,0.5), 0 0 10px rgba(255,0,0,0.3);
+     }
+     100% {
+       transform: rotate(-45deg) scale(1.25);
+       box-shadow: 0 0 12px rgba(255,0,0,0.9), 0 0 26px rgba(255,0,0,0.8);
+     }
+   }
+
+  </style>
 </head>
+
 <body>
   <nav>東郡山2丁目駐車場(月極駐車場)</nav>
+
   <main>
     <h1>太白区 東郡山2丁目 月極駐車場</h1>
-    <div class="flash-box" onclick="window.location.href='https://hk2parking.github.io/parking-map/hk2parking-aki.html'">空き有</div>
-    <div class="map-street-container">
-      <div id="map"></div>
-      <div id="street-view"></div>
+
+    <!-- 空き有フラッシュ（クリックで指定URLに遷移） -->
+    <div class="flash-box" onclick="window.location.href='https://hk2parking.github.io/parking-map/hk2parking-aki.html'">
+      空き有
     </div>
+
+    <!-- 地図 -->
+    <div id="map"></div>
+
+    <p>空き有ボタンで空き状況を確認できます。</p>
+
+    <h2>駐車場の特徴</h2>
+    <ul>
+      <li>月額6600円</li>
+      <li>防犯カメラが24時間AI監視で2台目の保管にも安心</li>
+      <li>フェンスで囲まれセキュリティ度高い</li>
+      <li>アルファード等大型乗用車OK</li>
+　　　<li>大型バイク屋根応相談</li>
+      <li>24時間出入り可能</li>
+      <li>月極</li>
+　　　<li>短期契約応相談</li>
+    </ul>
+
+    <h2>近隣エリアの月極駐車場</h2>
+    <ul>
+      <li><a href="#">郡山3丁目 月極駐車場</a></li>
+      <li><a href="#">郡山4丁目 月極駐車場</a></li>
+      <li><a href="#">八本松 月極駐車場</a></li>
+      <li><a href="#">鹿又交差点 周辺駐車場</a></li>
+    </ul>
+
   </main>
 
   <script>
-    let greenMarkers = [];
-    let pulseStep = 0;
-    let pulseDirection = 1;
+  async function initMap() {
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
 
-    function initMap() {
-      const center = { lat: 38.221168, lng: 140.90060 };
-     
-      const map = new google.maps.Map(document.getElementById("map"), {
-        center,
-        zoom: 17
-      });
+    const map = new Map(document.getElementById("map"), {
+      center: { lat: 38.221612, lng: 140.900544 },
+      zoom: 17,
+      mapId: "DEMO_MAP_ID"
+    });
 
-      const panorama = new google.maps.StreetViewPanorama(
-        document.getElementById("street-view"),
-        { position: center, pov: { heading: 34, pitch: 10 }, zoom: 1 }
-      );
-      map.setStreetView(panorama);
+    const infoWindow = new google.maps.InfoWindow();
+    const bounds = new google.maps.LatLngBounds();
 
-      fetch('parkings.csv')
-        .then(res => res.text())
-        .then(text => {
-          const lines = text.trim().split(/\r?\n/);
-          for(let i=1; i<lines.length; i++){
-            const cols = lines[i].split(',');
-            const name = cols[0]?.trim() || 'NoName-' + i;
-            let lat = parseFloat(cols[1]);
-            const lng = parseFloat(cols[2]);
-            const url = cols[3]?.trim() || '#';
-            const status = cols[4]?.trim().toLowerCase();
-            if(isNaN(lat)||isNaN(lng)) continue;
+    try {
+      const res = await fetch('parkings.csv');
+      const text = await res.text();
+      const lines = text.trim().split(/\r?\n/);
 
-            const color = status==='taken'?'red':'green';
-            if(color==='green') lat += offsetLat;
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',');
+        const name = cols[0]?.trim() || ('NoName-' + i);
+        const lat = parseFloat(cols[1]);
+        const lng = parseFloat(cols[2]);
+        const url = cols[3]?.trim() || '#';
+        const status = cols[4]?.trim().toLowerCase();
 
-            const marker = new google.maps.Marker({
-              position: { lat, lng },
-              map,
-              title: name,
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 10,
-                fillColor: color,
-                fillOpacity: 1,
-                strokeWeight: 2,
-                strokeColor: '#fff'
-              }
-            });
+        if (isNaN(lat) || isNaN(lng)) continue;
 
-            if(color==='green') greenMarkers.push(marker);
+        const color = status === 'taken' ? '#d33' : (status === 'free' ? '#28a745' : '#007bff');
+        const pinDiv = document.createElement("div");
+        pinDiv.className = "pin-drop";
 
-            const infowindow = new google.maps.InfoWindow({
-              content: `<strong>${name}</strong><br>` + (url!=='#'?`<a href="${url}" target="_blank">詳細を見る</a>`:'')
-            });
 
-            // ホバーで表示
-            marker.addListener('mouseover', () => {
-              infowindow.open(map, marker);
-            });
-            marker.addListener('mouseout', () => {
-              infowindow.close();
-            });
-          }
-        })
-        .catch(err => console.error(err));
-
-      // 緑マーカーの点滅アニメーション
-      setInterval(() => {
-        pulseStep += pulseDirection * 0.3;
-        if(pulseStep > 4 || pulseStep < 0) pulseDirection *= -1;
-        greenMarkers.forEach(m => {
-          const icon = m.getIcon();
-          icon.scale = 10 + pulseStep;
-          m.setIcon(icon);
+        const marker = new AdvancedMarkerElement({
+          map,
+          position: { lat, lng },
+          title: name,
+          content: pinDiv
         });
-      }, 100);
+
+        marker.addListener("click", () => {
+          infoWindow.setContent(`<strong>${name}</strong><br>` +
+            (url !== '#' ? `<a href="${url}" target="_blank" rel="noopener">詳細を見る</a>` : ''));
+          infoWindow.open(map, marker);
+        });
+
+        bounds.extend({ lat, lng });
+      }
+
+      if (!bounds.isEmpty()) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+        if (ne.equals(sw)) {
+          const delta = 0.0003;
+          bounds.extend({ lat: ne.lat() + delta, lng: ne.lng() + delta });
+        }
+        map.fitBounds(bounds);      // ← 範囲に合わせる　　
+       // --- fitBounds が適用された後に zoom を調整する ---
+　　　　google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+  　　  map.setZoom(17);   // ← 好きな zoom を設定（17だと狭いので16〜15推奨）
+　　});
+  }
+    } catch (err) {
+      console.error("CSVの読み込みエラー:", err);
     }
-  </script>
+  }
 
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
-  </script>
-</body>
-</html>
-
-
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  window.initMap = initMap;
   </script>
 </body>
 </html>
-
-
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
-  </script>
-</body>
-</html>
-
-
+　
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvMlZ7Q2VqRug6A5k8dCNax7ODFDiBRJc&callback=initMap"></script>
 </body>
-</html
+</html>
