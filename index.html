@@ -63,20 +63,17 @@
       const center = { lat: 38.221612, lng: 140.900544 };
       const offsetLat = 0.00005; // 緑マーカーを少し上にずらす
 
-      // 地図
       const map = new google.maps.Map(document.getElementById("map"), {
         center,
         zoom: 17
       });
 
-      // ストリートビュー
       const panorama = new google.maps.StreetViewPanorama(
         document.getElementById("street-view"),
         { position: center, pov: { heading: 34, pitch: 10 }, zoom: 1 }
       );
       map.setStreetView(panorama);
 
-      // CSVからマーカー生成
       fetch('parkings.csv')
         .then(res => res.text())
         .then(text => {
@@ -91,7 +88,7 @@
             if(isNaN(lat)||isNaN(lng)) continue;
 
             const color = status==='taken'?'red':'green';
-            if(color==='green') lat += offsetLat; // 上にずらす
+            if(color==='green') lat += offsetLat;
 
             const marker = new google.maps.Marker({
               position: { lat, lng },
@@ -109,11 +106,16 @@
 
             if(color==='green') greenMarkers.push(marker);
 
-            const infowindow = new google.maps.InfoWindow();
-            marker.addListener('click', () => {
-              infowindow.setContent(`<strong>${name}</strong><br>` + 
-                (url!=='#'?`<a href="${url}" target="_blank">詳細を見る</a>`:''));
+            const infowindow = new google.maps.InfoWindow({
+              content: `<strong>${name}</strong><br>` + (url!=='#'?`<a href="${url}" target="_blank">詳細を見る</a>`:'')
+            });
+
+            // ホバーで表示
+            marker.addListener('mouseover', () => {
               infowindow.open(map, marker);
+            });
+            marker.addListener('mouseout', () => {
+              infowindow.close();
             });
           }
         })
@@ -131,6 +133,13 @@
       }, 100);
     }
   </script>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  </script>
+</body>
+</html>
+
 
   <script async
     src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
