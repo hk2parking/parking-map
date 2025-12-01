@@ -105,6 +105,37 @@ body {
   font-size: 22px;
   font-weight: bold;
 }
+/* ▼ スマホ対応：画面幅が 768px 以下の場合 */
+@media (max-width: 768px) {
+
+  body {
+    margin: 10px;
+  }
+
+  .parking-container {
+    flex-direction: column;   /* 横並び → 縦並び */
+    align-items: center;
+  }
+
+  .map-image {
+    width: 100%;              /* 画面幅に合わせて縮小 */
+    height: auto;
+    margin-left: 0;
+    margin-top: 20px;
+  }
+
+  .spot-btn {
+    width: 120px;
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .space {
+    display: none;            /* スマホでは不要 */
+  }
+}
+
+
 </style>
 </head>
 <body>
