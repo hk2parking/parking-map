@@ -106,33 +106,36 @@ body {
   font-weight: bold;
 }
 
-/* ▼ スマホ対応：画面幅が 768px 以下の場合 */
-@media (max-width: 768px) {
-
-  body {
-    margin: 10px;
-  }
+/* ▼ 強制スマホ対応：幅 900px 以下すべて */
+@media (max-width: 900px) {
 
   .parking-container {
-    flex-direction: column;   /* 横並び → 縦並び */
+    flex-direction: column !important;  /* 横並び → 縦並び */
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .left-column, .right-column {
+    width: 100% !important;
     align-items: center;
   }
 
-  .map-image {
-    width: 100%;              /* 画面幅に合わせて縮小 */
-    height: auto;
-    margin-left: 0;
-    margin-top: 20px;
+  .spot-btn {
+    width: 70% !important;        /* 全体幅に合わせて絶対に入るサイズ */
+    max-width: 250px;
+    height: 50px !important;
+    font-size: 18px !important;
   }
 
-  .spot-btn {
-    width: 120px;
-    height: 50px;
-    font-size: 16px;
+  .map-image {
+    width: 100% !important;       /* 画像をスマホ幅に収める */
+    height: auto !important;
+    margin-left: 0 !important;
+    margin-top: 20px !important;
   }
 
   .space {
-    display: none;            /* スマホでは不要 */
+    display: none !important;     /* 中央の空白はスマホで不要 */
   }
 }
 </style>
