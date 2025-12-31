@@ -90,7 +90,17 @@
       from { opacity: 0.3; box-shadow: 0 0 4px #ff0000; }
       to   { opacity: 1; box-shadow: 0 0 16px #ff0000; }
     }
+    
+   .blink-price {
+      color: #ff0000;
+      font-weight: bold;
+      animation: blinkPrice 1s infinite alternate;
+    }
 
+@keyframes blinkPrice {
+  from { opacity: 1; }
+  to   { opacity: 0.3; }
+}
     main {
       padding: 16px;
       position: relative;
@@ -174,7 +184,7 @@
 
     <h2>駐車場の概要</h2>
     <ul>
-      <li>月額6000円</li>
+      <li><span class="blink-price">月額6000円</span></li>
       <li>契約手数料1か月【3月末まで無料！！】</li>
       <li>防犯カメラ4台が24時間AI監視で2台目の保管にも安心</li>
       <li>フェンスで囲まれセキュリティ度高い</li>
