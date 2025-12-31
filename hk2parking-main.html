@@ -3,38 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title>東郡山2丁目駐車場 | 東郡山2丁目駐車場 詳細</title>
+
   <style>
     body { font-family: sans-serif; margin: 20px; }
-    
-    /* タイトルを青背景・白文字・中央寄せに */
+
+    /* ===== タイトル ===== */
     h1 {
       border-bottom: 2px solid #333;
       padding: 15px 20px;
-      background-color: #007bff; /* 青背景 */
-      color: white;              /* 白文字 */
-      text-align: center;        /* 中央寄せ */
-      border-radius: 6px;        /* 角丸 */
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
     }
 
     h2 { margin-top: 30px; }
+
     table {
       border-collapse: collapse;
       width: 100%;
       max-width: 800px;
       margin-bottom: 20px;
     }
+
     th, td {
       border: 1px solid #ccc;
       padding: 8px 10px;
       text-align: left;
     }
+
     th { background: #f5f5f5; width: 30%; }
-    .photos img {
-      width: 45%;
-      max-width: 400px;
-      margin-right: 10px;
-      border-radius: 8px;
-    }
+
     .main-photo {
       display: block;
       width: 80%;
@@ -43,130 +42,149 @@
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    .back, .check-status {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 8px 16px;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .back { background: #0078ff; }
-    .check-status { background: #f39c12; margin-bottom: 10px; }
 
-    /* ▼▼ 追加：点滅アニメーション ▼▼ */
-    .blink {
-      animation: blink 2s step-start infinite;
-    }
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-    /* ▲▲ ここまで追加 ▲▲ */
-    .flow-text {
-     overflow: hidden;
-     white-space: nowrap;
-     width: 100%;
-     display: block;
-   }
-
-   .flow-text span {
-     display: inline-block;
-     padding-left: 100%;
-     animation: flow 12s linear infinite;
-
-     /* ▼ ここで元のデザインを維持 ▼ */
-     color: red;
-     font-size: 2em;
-     font-weight: bold;
-   }
-
-   @keyframes flow {
-     0%   { transform: translateX(0); }
-     100% { transform: translateX(-100%); }
-   }  
-
-    /* ボタン共通 */
-    a.button {
+    /* ===== ボタン ===== */
+    .button {
       display: inline-block;
       padding: 10px 18px;
       font-weight: bold;
       border-radius: 5px;
-      text-decoration: none !important;  /* ← 下線を完全に消す */
-      color: white !important;           /* ← 文字色を強制的に白にする */
+      text-decoration: none;
+      color: white;
     }
 
-    /* Googleフォームを開く → 青 */
     .form-button {
-      background-color: #007bff !important;
+      background-color: #007bff;
     }
 
-    /* 地図に戻る → 普通のリンク（背景なし・黒字） */
     .back-link {
-      background: none !important;
-      color: black !important;
-      text-decoration: underline;   /* 必要なら下線を外してもOK */
-      padding: 0 !important;
+      color: black;
+      text-decoration: underline;
       font-weight: normal;
+    }
+
+    /* ===== 流れる注意文 ===== */
+    .flow-text {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .flow-text span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: flow 12s linear infinite;
+      color: red;
+      font-size: 1.8em;
+      font-weight: bold;
+    }
+
+    @keyframes flow {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ===== NEW バッジ ===== */
+    .new-badge {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      background: red;
+      color: white;
+      font-weight: bold;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      z-index: 9999;
+      animation: flash 1s infinite alternate;
+      transition: opacity 1.5s ease;
+    }
+
+    @keyframes flash {
+      0% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+
+    .fadeout {
+      opacity: 0;
+      pointer-events: none;
     }
   </style>
 </head>
+
 <body>
-  <h1>仙台市太白区 東郡山2丁目駐車場</h1>
 
-  <h2>東郡山2丁目駐車場 写真</h2>
-  <img src="zenkei.jpg" alt="東郡山2丁目駐車場全景" class="main-photo">
+<!-- 🔴 NEW バッジ -->
+<div id="newBadge" class="new-badge" data-start="2025-12-30">
+  NEW
+</div>
 
-  <h2>東郡山2丁目駐車場 区画図</h2>
-  <img src="kukaku.jpg" alt="太白区東郡山2丁目 月極駐車場 区画図" class="main-photo">
+<h1>仙台市太白区 東郡山2丁目駐車場</h1>
 
-  <h2>基本情報</h2>
-  <table>
-    <tr><th>物件種目</th><td>月極駐車場</td></tr>
-    <tr><th>所在地</th><td>仙台市太白区東郡山２丁目１０−</td></tr>
-    <tr><th>区画サイズ</th><td>2500ｘ5000 平面</td></tr>
-    <tr><th>賃料</th><td>6000円</td></tr>    
-    <tr><th>取引態様</th><td>貸主</td></tr>
-    <tr><th>敷金</th><td>1ヶ月</td></tr>
-    <tr><th>契約手数料</th><td>1ヶ月【３月末まで無料！】</td></tr>
-    <tr><th>仲介が入る場合仲介手数料</th><td>1ヶ月</td></tr>
-    <tr><th>備考</th><td>審査有</td></tr>
-    <tr><th>防犯設備</th><td>カメラ4台によるAI入出庫管理システム</td></tr>
-    <tr><th>情報更新日</th><td>2025年12月31日</td></tr>
-  </table>
+<h2>東郡山2丁目駐車場 写真</h2>
+<img src="zenkei.jpg" class="main-photo">
 
-  <!-- 空状況確認ボタン -->
-  <a href="hk2parking-aki.html" class="check-status">▶ 空状況を確認する</a>
+<h2>東郡山2丁目駐車場 区画図</h2>
+<img src="kukaku.jpg" class="main-photo">
 
-  <h2>申込・問い合わせ・内見予約</h2>
-  <p>
-    下記フォームからお申し込み・お問い合わせ・ご予約ください。<br><br>
+<h2>基本情報</h2>
+<table>
+  <tr><th>物件種目</th><td>月極駐車場</td></tr>
+  <tr><th>所在地</th><td>仙台市太白区東郡山２丁目１０−</td></tr>
+  <tr><th>区画サイズ</th><td>2500×5000</td></tr>
+  <tr><th>賃料</th><td>6,000円</td></tr>
+  <tr><th>取引態様</th><td>貸主</td></tr>
+  <tr><th>敷金</th><td>1ヶ月</td></tr>
+  <tr><th>契約手数料</th><td>1ヶ月（3月末まで無料）</td></tr>
+  <tr><th>仲介手数料</th><td>1ヶ月</td></tr>
+  <tr><th>備考</th><td>審査有</td></tr>
+  <tr><th>防犯設備</th><td>カメラ4台 AI監視</td></tr>
+  <tr><th>情報更新日</th><td>2025年12月31日</td></tr>
+</table>
 
-    <!-- ▼ 点滅から流れる文字変更 ▼ -->
-    <div class="flow-text">
-     <span>
-       内見をされる前に必ずフォームからご予約ください。 契約車以外の侵入は防犯システムが作動し通報されます。
-     </span>
-   </div>
+<a href="hk2parking-aki.html" class="button form-button">▶ 空状況を確認する</a>
 
-    <!-- ▲ 点滅部分ここまで ▲ -->
-    <br><br>
+<h2>申込・問い合わせ・内見予約</h2>
 
-    <!-- Googleフォームを開く（青） -->
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeMoWYK5mWNbSyHo5U3U5iX0-_AAMc9Uj_PO4EXyD3jOZXBKQ/viewform?usp=header"
-       target="_blank"
-       class="button form-button">
-      ▶ Googleフォームを開く
-    </a>
+<div class="flow-text">
+  <span>
+    内見前は必ずフォームからご予約ください。無断侵入は防犯システムが作動します。
+  </span>
+</div>
 
-    <br><br>
+<br>
 
-    <!-- 地図に戻る（普通の黒字リンク） -->
-    <a href="index.html" class="back-link">
-      ← 地図に戻る
-    </a>
-      </p>
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSeMoWYK5mWNbSyHo5U3U5iX0-_AAMc9Uj_PO4EXyD3jOZXBKQ/viewform"
+   target="_blank"
+   class="button form-button">
+   ▶ Googleフォームを開く
+</a>
 
-  
+<br><br>
+
+<a href="index.html" class="back-link">← 地図に戻る</a>
+
+<!-- ===== NEW制御スクリプト ===== -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const badge = document.getElementById("newBadge");
+  const startDate = new Date(badge.dataset.start);
+  const now = new Date();
+
+  const days = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+
+  if (days < 7) {
+    badge.textContent = "NEW";
+  } else if (days < 45) {
+    badge.textContent = "更新";
+  } else {
+    badge.classList.add("fadeout");
+    setTimeout(() => {
+      badge.style.display = "none";
+    }, 1500);
+  }
+});
+</script>
+
 </body>
 </html>
+
