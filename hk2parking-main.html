@@ -168,7 +168,45 @@
         flex: 0 0 100%;
       }
     }
+    .help-wrapper {
+      position: relative;
+    }
 
+    .help-icon {
+      display: inline-block;
+      margin-left: 6px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      text-align: center;
+      border-radius: 50%;
+      background: #007bff;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: default;
+    }
+
+    .help-popup {
+      display: none;
+      position: absolute;
+      top: 26px;
+      left: 0;
+      background: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      width: 240px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+
+    /* ホバー時に表示 */
+    .help-wrapper:hover .help-popup {
+      display: block;
+    }
   </style>
 </head>
 
@@ -202,7 +240,18 @@
   <tr><th>防犯設備</th><td>カメラ4台 AI監視</td></tr>
   <tr><th>賃料</th><td>6,000円</td></tr>
   <tr><th>敷金</th><td>1ヶ月</td></tr>
-  <tr><th>電子契約</th><td>対応</td></tr>
+  <tr>
+    <th>電子契約</th>
+    <td class="help-wrapper">
+      対応
+      <span class="help-icon">？</span>
+
+      <div class="help-popup">
+        スマートフォン・PCからオンラインで契約手続きが可能です。<br>
+        書面の郵送や不動産屋への来店は不要です。
+      </div>
+    </td>
+  </tr>
   <tr><th>契約手数料</th><td class="fee-highlight">1ヶ月（個人契約は3月末まで無料！！電子契約対応記念）</td></tr>　
   <tr><th>最低契約期間</th><td>3ヶ月</td></tr>
 　<tr><th>法人契約</th><td>可能(条件有)</td></tr>
