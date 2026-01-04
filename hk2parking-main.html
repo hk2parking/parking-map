@@ -131,14 +131,17 @@
 　　/* ===== 写真・区画 横並び ===== */
     .photo-row {
       display: flex;
+      max-width: 1200px;   /* ← PCで必ず横幅を持たせる */
+      margin: 0 auto 30px;
       gap: 20px;
-      justify-content: center;
-      margin-bottom: 30px;
+      box-sizing: border-box;
     }
 
     .photo-box {
+      flex: 0 0 50%;       /* ← 50%固定（ここが最重要） */
       width: 50%;
       text-align: center;
+      box-sizing: border-box;
     }
 
     .photo-box img {
@@ -161,6 +164,7 @@
 
       .photo-box {
         width: 100%;
+        flex: 0 0 100%;
       }
     }
 
